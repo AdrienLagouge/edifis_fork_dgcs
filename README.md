@@ -10,7 +10,7 @@ Ensuite, le projet contient 3 dossiers:
 - R: contient l'ensemble des autres scripts R utilisés dans l'application
 - www: contient des éléments de mise en forme de l'application (le fichier bootstrapv5.css et les différentes images notamment)
 
-Pour lancer l'application, il faut télécharger l'ensemble du dossier sur son poste, ouvrir 'Edifis.Rproj' sous R puis cliquer sur le bouton 'Run App'.
+Pour lancer l'application, il faut télécharger l'ensemble du dossier sur son poste, ouvrir 'Edifis.Rproj' sous R, puis global.R, puis installer les packages requis (listés en tête de pgm) et enfin cliquer sur le bouton 'Run App'.
 
 Lien vers l'application en ligne : https://drees.shinyapps.io/Drees_Maquette_Edifis/
 

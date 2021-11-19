@@ -78,7 +78,7 @@ library(plotly)
 library(shinydashboard)
 library(plotly)
 
-
+# fonction SI() utilisée dans les pgms base.R et cas-type.R (à terme n'utiliser que IFELSE())
 SI <- function(condition,valeur_si_vrai,valeur_si_faux){
   res <- (condition)*valeur_si_vrai + (1-(condition))*valeur_si_faux
   return(res)
