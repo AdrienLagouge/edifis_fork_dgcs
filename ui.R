@@ -196,7 +196,7 @@ ui <-
                                    p("- Le recours : le recours est automatique pour toutes les prestations."),
                                    p("- A partir de 2020 : les revalorisations exceptionnelles d'ARS, de RSA, d'ASS et d'AL en 2020 puis l'indemnité inflation en 2021 et 2022 versées ponctuellement ne sont pas incluses."),
                                    h3("Le code en libre accès"),
-                                   a(href = "https://gitlab.com/DREES_code/public/outils", "Disponible ici."),
+                                   a(href = "https://git.drees.fr/drees_code_public/outils/edifis", "Disponible ici."),
                                    HTML("<br><br>")
                                    ),
                             column(4)
