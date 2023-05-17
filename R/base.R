@@ -1,15 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2021. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
 #
 # Nom du dernier auteur : Camille Dufour, Drees.
 #
 # Noms des co-auteurs : Simon Fredon et Chloé Pariset
 #
-# Ce programme informatique a été développé par la Drees. 
-# Il permet de de reproduire l'application R-Shiny "Edifis". 
+# Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 08/11/2021 avec la version 4.0.5 de R.
+# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -118,7 +117,7 @@ exo_fillon1 <<- function(x,bareme){
 }
 
 exo_fillon <<- function(x,y,z,bareme){
-  v <<- SI(z>0,pmax( bareme[["tx_exo_fillon_smic"]]*x* (bareme[["plafond_exo_fillon"]]*(y/z)-1)/(bareme[["plafond_exo_fillon"]]-1),0),0)
+  v <<- ifelse(z>0,pmax( bareme[["tx_exo_fillon_smic"]]*x* (bareme[["plafond_exo_fillon"]]*(y/z)-1)/(bareme[["plafond_exo_fillon"]]-1),0),0)
   return(v)
 }
 
@@ -186,15 +185,15 @@ choix_input <<- function(n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n15,n16,n17,n18,n
 ### RSA ###
   
 #Calcul montant forfaitaire du RSA
-mf_RSA <<- SI((nb_adultes==1)&&(maj_isole_rsa==0),
+mf_RSA <<- ifelse((nb_adultes==1)&&(maj_isole_rsa==0),
          bareme_var[["mont_forfaitaire_rsa"]]*(
            1+(nb_enfants>=1)*bareme_var[["tx_majo_rsa_pac1"]]+(nb_enfants>=2)*bareme_var[["tx_majo_rsa_enf12"]]+
              pmax(nb_enfants-2,0)*bareme_var[["tx_majo_rsa_enf3"]]
          ),
-         0)+SI(nb_adultes==2,
+         0)+ifelse(nb_adultes==2,
                bareme_var[["mont_forfaitaire_rsa"]]*(1+bareme_var[["tx_majo_rsa_pac1"]]+pmin(nb_enfants,2)*bareme_var[["tx_majo_rsa_enf12"]]+
                                                        pmax(nb_enfants-2,0)*bareme_var[["tx_majo_rsa_enf3"]]),
-               0)+SI((nb_adultes==1)&&(maj_isole_rsa==1),
+               0)+ifelse((nb_adultes==1)&&(maj_isole_rsa==1),
                      bareme_var[["mont_forfaitaire_rsa_maj"]]*(1+pmin(nb_enfants,2)*bareme_var[["tx_majo_rsa_majo_enf12"]]+
                                                                  pmax(nb_enfants-2,0)*bareme_var[["tx_majo_rsa_majo_enf3"]]),
                      0)
@@ -207,15 +206,15 @@ fl_RSA <<- (((nb_adultes+nb_enfants)==1)*bareme_var[["forf_logement_rsa_1"]])+ (
 
 #Calcul montant forfaitaire de la PA
 if (year>15){
-mf_PA <<- SI((nb_adultes==1)&&(maj_isole_rsa==0),
+mf_PA <<- ifelse((nb_adultes==1)&&(maj_isole_rsa==0),
          bareme_var[["mont_forfaitaire_PA"]]*(
            1+(nb_enfants>=1)*bareme_var[["tx_majo_rsa_pac1"]]+(nb_enfants>=2)*bareme_var[["tx_majo_rsa_enf12"]]+pmax(nb_enfants-2,0)*bareme_var[["tx_majo_rsa_enf3"]]),
          0
-         ) + SI(nb_adultes==2,
+         ) + ifelse(nb_adultes==2,
                 bareme_var[["mont_forfaitaire_PA"]]*(1+bareme_var[["tx_majo_rsa_pac1"]]+pmin(nb_enfants,2)*bareme_var[["tx_majo_rsa_enf12"]]+
                                                        pmax(nb_enfants-2,0)*bareme_var[["tx_majo_rsa_enf3"]]),
                 0
-         )+ SI((nb_adultes==1)&&(maj_isole_rsa==1),
+         )+ ifelse((nb_adultes==1)&&(maj_isole_rsa==1),
                bareme_var[["montant_forfaitaire_PA_majo"]]*(1+pmin(nb_enfants,2)*bareme_var[["tx_majo_rsa_majo_enf12"]]+
                                                               pmax(nb_enfants-2,0)*bareme_var[["tx_majo_rsa_majo_enf3"]]),
                0
@@ -233,41 +232,41 @@ fl_PA <<- (((nb_adultes+nb_enfants)==1)*bareme_var[["forf_logement_PA_1"]])+ (((
 ### Allocations familiales ###
 
 # Dont majo pour age
-af_majo_age <<- SI((nb_enfants-nb_enft_20)>=3,
+af_majo_age <<- ifelse((nb_enfants-nb_enft_20)>=3,
          (nb_enft_1519+nb_enft_14)*bareme_var[["majo_age_Af"]],
          0)+
-      SI((nb_enfants-nb_enft_20==2)&&(nb_enft_1519+nb_enft_14==2),
+      ifelse((nb_enfants-nb_enft_20==2)&&(nb_enft_1519+nb_enft_14==2),
          bareme_var[["majo_age_Af"]],
          0)
 
 # Montant AF
-montant_af <<- SI((nb_enfants-nb_enft_20)>=2,
+montant_af <<- ifelse((nb_enfants-nb_enft_20)>=2,
          bareme_var[["AF_2enft"]]+pmax(0,bareme_var[["AF_enft_sup"]]*(nb_enfants-nb_enft_20-2)) 
-         + SI((nb_enft_20>=1)&&(nb_enfants>=3), bareme_var[["AF_forf_20ans"]],0) + af_majo_age,
+         + ifelse((nb_enft_20>=1)&&(nb_enfants>=3), bareme_var[["AF_forf_20ans"]],0) + af_majo_age,
          0)
 
 
 # Plafond 1ere tranche AF
-plaf_1tranch_AF <<- bareme_var[["p1_modulation_af"]]+SI((nb_enfants-nb_enft_20)>2, 
+plaf_1tranch_AF <<- bareme_var[["p1_modulation_af"]]+ifelse((nb_enfants-nb_enft_20)>2, 
                                             (nb_enfants-nb_enft_20-2)*bareme_var[["sup_enf_modulation_af"]], 0)
-        +SI((nb_enft_20)>=1&&(nb_enfants)>2, 
+        +ifelse((nb_enft_20)>=1&&(nb_enfants)>2, 
              nb_enft_20*bareme_var[["sup_enf_modulation_af"]], 0)
 
 # Plafond 2eme tranche AF
-plaf_2tranch_AF <<- bareme_var[["p2_modulation_af"]]+SI((nb_enfants-nb_enft_20)>2, 
+plaf_2tranch_AF <<- bareme_var[["p2_modulation_af"]]+ifelse((nb_enfants-nb_enft_20)>2, 
                                               (nb_enfants-nb_enft_20-2)*bareme_var[["sup_enf_modulation_af"]], 0)
-         +SI((nb_enft_20)>=1&&(nb_enfants)>2, 
+         +ifelse((nb_enft_20)>=1&&(nb_enfants)>2, 
               nb_enft_20*bareme_var[["sup_enf_modulation_af"]], 0)
  
 
 ### Allocations logements ###
 
 # Loyer plafonne et charges (L+C)
-al_LC <<- SI(nb_enfants==0,
-         SI(nb_adultes==1,
+al_LC <<- ifelse(nb_enfants==0,
+         ifelse(nb_adultes==1,
             bareme_var[["LC_isole"]],
             bareme_var[["LC_couple"]]),
-         SI(nb_enfants==1,
+         ifelse(nb_enfants==1,
             bareme_var[["LC_1_pac"]],bareme_var[["LC_1_pac"]]+bareme_var[["Lc_supp_pac"]]*(nb_enfants-1))
          )
 
@@ -275,17 +274,17 @@ al_LC <<- SI(nb_enfants==0,
 al_PO <<- pmax (bareme_var[["montant_PO"]],bareme_var[["taux_PO"]]*al_LC)
 
 # Taux famille (TF)
-al_TF <<- SI(nb_enfants==0,
-         SI(nb_adultes==1,
+al_TF <<- ifelse(nb_enfants==0,
+         ifelse(nb_adultes==1,
             bareme_var[["TF_isole"]],
             bareme_var[["TF_couple"]]),
-         SI(nb_enfants==1,
+         ifelse(nb_enfants==1,
             bareme_var[["TF_1pac"]],
-            SI(nb_enfants==2,
+            ifelse(nb_enfants==2,
                bareme_var[["TF_2pac"]],
-               SI(nb_enfants==3,
+               ifelse(nb_enfants==3,
                   bareme_var[["TF_3pac"]],
-                  SI(nb_enfants==4,
+                  ifelse(nb_enfants==4,
                      bareme_var[["TF_4pac"]],
                      bareme_var[["TF_4pac"]]+bareme_var[["Tf_pers_sup"]]*(nb_enfants-4)
                      )
@@ -296,21 +295,21 @@ al_TF <<- SI(nb_enfants==0,
   
   
 # Abattement forfaitaire de ressources - R0
-  al_RO <<- SI(nb_enfants==0,
-               SI(nb_adultes==1,
+  al_RO <<- ifelse(nb_enfants==0,
+               ifelse(nb_adultes==1,
                   bareme_var[["R0_isole"]],
                   bareme_var[["R0_couple"]]),
-               SI(nb_enfants==1,
+               ifelse(nb_enfants==1,
                   bareme_var[["R0_1pac"]],
-                  SI(nb_enfants==2,
+                  ifelse(nb_enfants==2,
                      bareme_var[["R0_2pac"]],
-                     SI(nb_enfants==3,
+                     ifelse(nb_enfants==3,
                         bareme_var[["R0_3pac"]],
-                        SI(nb_enfants==4,
+                        ifelse(nb_enfants==4,
                            bareme_var[["R0_4pac"]],
-                           SI(nb_enfants==5,
+                           ifelse(nb_enfants==5,
                               bareme_var[["R0_5pac"]],
-                              SI(nb_enfants==6,
+                              ifelse(nb_enfants==6,
                                  bareme_var[["R0_6pac"]],
                                  bareme_var[["R0_6pac"]]+bareme_var[["R0_pers_sup"]]*(nb_enfants-6)
                               )
@@ -328,20 +327,20 @@ al_RO <<- al_RO/12
 # Cotisations sociales employeurs
 if (year>18){
   cs_emp <<- function(x,bareme){
-    y <<- SI(x>0,bareme[["taux_cs_emp_t1"]]*pmin(x, bareme[["plafond_ss"]]),0)+
-      SI(x>bareme[["plafond_ss"]],bareme[["taux_cs_emp_t2"]]*pmin(x-bareme[["plafond_ss"]], 2*bareme[["plafond_ss"]]),0)+
-      SI(x>3*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 3*bareme[["plafond_ss"]]),0)+
-      SI(x>4*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t4"]]*pmin(x-4*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]]),0)+
-      SI(x>8*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t5"]]*(x-8*bareme[["plafond_ss"]]),0)+
-      SI(x>bareme[["plafond_ss"]],bareme[["emp_retraites_comp_cet"]]*pmin(x, 8*bareme[["plafond_ss"]]),0)  
+    y <<- ifelse(x>0,bareme[["taux_cs_emp_t1"]]*pmin(x, bareme[["plafond_ss"]]),0)+
+      ifelse(x>bareme[["plafond_ss"]],bareme[["taux_cs_emp_t2"]]*pmin(x-bareme[["plafond_ss"]], 2*bareme[["plafond_ss"]]),0)+
+      ifelse(x>3*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 1*bareme[["plafond_ss"]]),0)+
+      ifelse(x>4*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t4"]]*pmin(x-4*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]]),0)+
+      ifelse(x>8*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t5"]]*(x-8*bareme[["plafond_ss"]]),0)+
+      ifelse(x>bareme[["plafond_ss"]],bareme[["emp_retraites_comp_cet"]]*pmin(x, 8*bareme[["plafond_ss"]]),0)  
     return(y)
   }
   } else {
     cs_emp <<- function(x,bareme){
-      y <<- SI(x>0,bareme[["taux_cs_emp_t1"]]*pmin(x, bareme[["plafond_ss"]]),0)+
-        SI(x>bareme[["plafond_ss"]],bareme[["taux_cs_emp_t2"]]*pmin(x-bareme[["plafond_ss"]], 2*bareme[["plafond_ss"]]),0)+
-        SI(x>3*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 3*bareme[["plafond_ss"]]),0)+
-        SI(x>4*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t4"]]*(x-4*bareme[["plafond_ss"]]),0)
+      y <<- ifelse(x>0,bareme[["taux_cs_emp_t1"]]*pmin(x, bareme[["plafond_ss"]]),0)+
+        ifelse(x>bareme[["plafond_ss"]],bareme[["taux_cs_emp_t2"]]*pmin(x-bareme[["plafond_ss"]], 2*bareme[["plafond_ss"]]),0)+
+        ifelse(x>3*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 1*bareme[["plafond_ss"]]),0)+
+        ifelse(x>4*bareme[["plafond_ss"]],bareme[["taux_cs_emp_t4"]]*(x-4*bareme[["plafond_ss"]]),0)
       return(y)
 }
 }
@@ -360,17 +359,17 @@ if (year>18){
   cs_sal <<- function(x,bareme){
     y<<- (x>0)*bareme[["taux_cs_sal_t1"]]*pmin(x, bareme[["plafond_ss"]])+
       (x>bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t2"]]*pmin(x-bareme[["plafond_ss"]], 2*bareme[["plafond_ss"]])+
-      (x>3*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 3*bareme[["plafond_ss"]])+ # NB : formule corrigee : pmin(sal_brut_conjoint - 3*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]]) plutÃ´t que pmin(sal_brut_conjoint -3*bareme[["plafond_ss"]], bareme[["plafond_ss"]])
-    (x>4*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t4"]]*pmin(x-4*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]])+ # NB : formule corrigee : pmin(sal_brut_conjoint - 3*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]]) plutÃ´t que pmin(sal_brut_conjoint -3*bareme[["plafond_ss"]], bareme[["plafond_ss"]])
+      (x>3*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 1*bareme[["plafond_ss"]])+ 
+    (x>4*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t4"]]*pmin(x-4*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]])+ 
     (x>8*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t5"]]*(x-8*bareme[["plafond_ss"]])+
-    SI(x>bareme[["plafond_ss"]],bareme[["sal_retraites_comp_cet"]]*pmin(x, 8*bareme[["plafond_ss"]]),0)  
+    ifelse(x>bareme[["plafond_ss"]],bareme[["sal_retraites_comp_cet"]]*pmin(x, 8*bareme[["plafond_ss"]]),0)  
     return(y)
   }
 } else {
   cs_sal <<- function(x,bareme){
     y<<- (x>0)*bareme[["taux_cs_sal_t1"]]*pmin(x, bareme[["plafond_ss"]])+
       (x>bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t2"]]*pmin(x-bareme[["plafond_ss"]], 2*bareme[["plafond_ss"]])+
-      (x>3*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 3*bareme[["plafond_ss"]])+ # NB : formule corrigee : pmin(sal_brut_conjoint - 3*bareme[["plafond_ss"]], 4*bareme[["plafond_ss"]]) plutÃ´t que pmin(sal_brut_conjoint -3*bareme[["plafond_ss"]], bareme[["plafond_ss"]])
+      (x>3*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t3"]]*pmin(x-3*bareme[["plafond_ss"]], 1*bareme[["plafond_ss"]])+
       (x>4*bareme[["plafond_ss"]])*bareme[["taux_cs_sal_t4"]]*(x-4*bareme[["plafond_ss"]])
     return(y)
   }
@@ -392,7 +391,7 @@ sal_declar_conj <<- (nb_adultes==2)*(sal_brut_conjoint-cotis_sal_conj-csg_deduc_
 cout_trav_conj <<- (nb_adultes==2)*(sal_brut_conjoint+cotis_emp_conj-exo_fillon_conj)
 
 # Salaire mensuel net du conjoint
-sal_net_conj <<- SI(nb_adultes==2,sal_brut_conjoint-cotis_sal_conj-csg_deduc_conj-csg_non_deduc_conj,0)
+sal_net_conj <<- ifelse(nb_adultes==2,sal_brut_conjoint-cotis_sal_conj-csg_deduc_conj-csg_non_deduc_conj,0)
 
 
 ### Quotient familial ###
@@ -402,7 +401,7 @@ nb_part <<- nb_adultes+(nb_enfants*0.5)+(nb_enfants>2)*(nb_enfants-2)*0.5 + (nb_
 
 # Avantage maximal lie au quotien familial
 max_qf <<- bareme_var[["plafond_qf"]]*(nb_part-nb_adultes)*2 + 
-        SI((nb_adultes==1)&&(nb_enfants>0),bareme_var[["plaf_qf_monoparent"]]-2*bareme_var[["plafond_qf"]]  , 0)
+        ifelse((nb_adultes==1)&&(nb_enfants>0),bareme_var[["plaf_qf_monoparent"]]-2*bareme_var[["plafond_qf"]]  , 0)
 
 
 ### Taxe d'habitation ###
@@ -411,10 +410,16 @@ max_qf <<- bareme_var[["plafond_qf"]]*(nb_part-nb_adultes)*2 +
 montant_TH <<- (nb_adultes==1)*bareme_var[["montant_th_1pers"]] + (nb_adultes!=1)*bareme_var[["mont_th_couple"]]
   
 # Abattement RFR
-abat_rfr <<- bareme_var[["abt_th_base"]]+bareme_var[["abt_th_4demipart"]]*pmin(2,nb_part-1)*2+bareme_var[["abt_th_demipartsup"]]*pmax(0,nb_part-3)*2
+if (year<20){
+  abat_rfr <<- bareme_var[["abt_th_base"]]+bareme_var[["abt_th_4demipart"]]*pmin(2,nb_part-1)*2+bareme_var[["abt_th_demipartsup"]]*pmax(0,nb_part-3)*2
+} else {
+  abat_rfr <<-0
+}
 
 # Plafond d'eligiblite
-plaf_elig_th <<- bareme_var[["plaf_th_base"]]+bareme_var[["plaf_th_1demipart"]]*pmin(1.5,nb_part-1)*2+bareme_var[["plaf_th_demipartsup"]]*pmax(0,nb_part-1.5)*2
+if (year<20) {plaf_elig_th <<- bareme_var[["plaf_th_base"]]+bareme_var[["plaf_th_1demipart"]]*pmin(1.5,nb_part-1)*2+bareme_var[["plaf_th_demipartsup"]]*pmax(0,nb_part-1.5)*2}
+else {plaf_elig_th <<-0}
+
 
 #Seuil RFR dégrèvement total
 if (year>17){
@@ -476,7 +481,7 @@ sal_ref_conj_are <<- (nb_adultes==2)*(are_nette_conjoint/bareme_var[["rap_salnet
 }
 
 ### Reduction d'IR ###
-if (year>16){
+if (year>16 & year<20){
   # 1er plafond
   prem_plaf_RI <<- (nb_adultes>1)*(bareme_var[["plaf1_RI_couple"]]+bareme_var[["RI_demipart"]]*(nb_part-2)) + (nb_adultes<=1)*(bareme_var[["plaf1_RI"]]+bareme_var[["RI_demipart"]]*(nb_part-1))
   #2e plafond
@@ -486,11 +491,13 @@ if (year>16){
   deux_plaf_RI <<- 0
 }
 
+
+
 ### Prime pour l'emploi (seulement de 2013 à 2015, disparait apres et devient PA) ###
 
 if (year<16){
   # Plafond RFR PPE
-  plaf_rfr_ppe <<- SI(nb_adultes==1,
+  plaf_rfr_ppe <<- ifelse(nb_adultes==1,
              bareme_var[["plaf_ppe_seul"]],
              bareme_var[["plaf_ppe_couple"]])+
     bareme_var[["plaf_ppe_suppl_enf"]]*pmin(2,nb_enfants)+2*bareme_var[["plaf_ppe_suppl_enf"]]*pmax(0,nb_enfants-2)

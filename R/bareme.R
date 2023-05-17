@@ -1,15 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2021. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
 #
 # Nom du dernier auteur : Camille Dufour, Drees.
 #
 # Noms des co-auteurs : Simon Fredon et Chloé Pariset
 #
-# Ce programme informatique a été développé par la Drees. 
-# Il permet de de reproduire l'application R-Shiny "Edifis". 
+# Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 08/11/2021 avec la version 4.0.5 de R.
+# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -59,7 +58,52 @@
 
 
 
-var_names <- list("21"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_enf12","tx_majo_rsa_enf3",
+var_names <- list("22"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_enf12","tx_majo_rsa_enf3",
+                         "mont_forfaitaire_rsa_maj","tx_majo_rsa_majo_enf12","tx_majo_rsa_majo_enf3",
+                         "forf_logement_rsa_1","forf_logement_rsa_2","forf_logement_rsa_3", "noel_1pers",
+                         "noel_2pers","noel_3pers","noel_isole_4pers","noel_couple_4pers","noel_pers_sup",
+                         "seuil_versement_rsa","AF_2enft","AF_enft_sup","majo_age_Af","AF_forf_20ans", "p1_modulation_af",
+                         "p2_modulation_af", "sup_enf_modulation_af","LC_isole","LC_couple","LC_1_pac","Lc_supp_pac","montant_PO",
+                         "taux_PO","al_taux_compl","TF_isole","TF_couple","TF_1pac","TF_2pac","TF_3pac","TF_4pac",
+                         "Tf_pers_sup","R0_isole","R0_couple","R0_1pac","R0_2pac","R0_3pac","R0_4pac","R0_5pac","R0_6pac","R0_pers_sup","Mfo_deduire",
+                         "seuil_versement_AL","APL_abatt_biactifs","ars6_10","ars_11_14","ars_15_18","plaf_ars","plaf_ars_enf",
+                         "montant_CF","plafond_simple_CF","plafond_maj_CF","pers_sup_CF","montant_CF_majo","plafond_simple_CF_majo",
+                         "plafond_maj_CF_majo","pers_sup_CF_majo","bmaf_n_2","bmaf_n_1","bmaf",
+                         "mont_ASF_total","mont_ASF_RSA","montant_paje_plein","plaf_simple_paje_plein","plafond_majore_paje_plein",
+                         "plafond_sup_enf_12_paje_plein","plafond_sup_enf_3_paje_plein","montant_paje_partiel","plaf_simple_paje",
+                         "plafond_majore_paje","plafond_sup_enf_12_paje","plafond_sup_enf_3_paje","mont_forfaitaire_PA",
+                         "montant_forfaitaire_PA_majo","PA_tranche1smic","PA_tranche2smic","PA_pente","PA_bonus",
+                         "seuil_versement_PA","forf_logement_PA_1","forf_logement_PA_2","forf_logement_PA_3","Sal_min_AAH_PA",
+                         "plaf_cmuc_base","plaf_cmuc_1pac","plaf_cmuc_34pac","plaf_cmuc_5pluspac",
+                         "tx_majo_plafond_cssp","montant_cssp_0_15","montant_cssp_16_49","montant_cssp_50_59","montant_cssp_60_plus",
+                         "remb_moyen_cmu","montant_cmuc_0_15","montant_cmuc_16_49","montant_cmuc_50_59","montant_cmuc_60_plus",
+                         "plafond_ener_1tranch","plafond_ener_2tranch","plafond_ener_3tranch","plafond_ener_4tranch",
+                         "ener_1tranch_1UC","ener_1tranch_2UC","ener_1tranch_3UC", "ener_2tranch_1UC", "ener_2tranch_2UC", "ener_2tranch_3UC",
+                         "ener_3tranch_1UC", "ener_3tranch_2UC", "ener_3tranch_3UC","ener_4tranch_1UC", "ener_4tranch_2UC", "ener_4tranch_3UC", "abatt_rbg_are", "AAH_plaf_seul",
+                         "AAH_plaf_couple","AAH_plaf_sup_pac","AAH_montant","AAH_cplmt_ressources","AAH_mva","AAH_abatt_general","AAH_abatt_majo",
+                         "AAH_abatt_salaire_t1","AAH_abatt_salaire_t2","AAH_plafond_abatt_salaire","ASS_diff_plaf_seule",
+                         "ASS_plaf_seule","ASS_diff_plaf_couple","ASS_plaf_couple","ASS_mtt_forf","seuil_vers_ASS",
+                         "noel_ASS","taux_ir_t1","plafond_ir_t1","taux_ir_t2","plafond_ir_t2", "taux_ir_t3","plafond_ir_t3",
+                         "taux_ir_t4","plafond_ir_t4","taux_ir_t5","Decote_taux","mont_decote_celib","mont_decote_couple",
+                         "plafond_qf","plaf_qf_monoparent", "IR_abatt_frais","IR_abatt_plancher","IR_abatt_plafond","seuil_recouvrement_IR",
+                         "seuil_recouvrement_IR_apres_credits","plafond_ss","tx_csg_tot", "tx_csg_deduc","CSG_abatt_frais","tx_crds",
+                         "taux_csgcrds_nondeduc_t1","taux_csgcrds_nondeduc_t2","taux_csg_deduc_t1",
+                         "taux_csg_deduc_t2","sal_maladie", "sal_vieillesse_tot","sal_vieillesse_t1",
+                         "sal_chomage","sal_retraites_comp_t1","sal_retraites_comp_t2","sal_retraites_comp_cet","taux_cs_sal_t1",
+                         "taux_cs_sal_t2","taux_cs_sal_t3","taux_cs_sal_t4","taux_cs_sal_t5","seuil_smic_pat_assmal","emp_maladie_t1","emp_maladie_t2","emp_vieillesse_tot",
+                         "emp_vieillesse_t1","emp_chomage","emp_retraites_comp_t1","emp_retraites_comp_t2","emp_retraites_comp_cet",
+                         "emp_solidarite","emp_famille","mod_cotis_fam","part_smic_exo","emp_acc_trav","emp_fnal", "emp_syndic",
+                         "taux_cs_emp_t1","taux_cs_emp_t2","taux_cs_emp_t3","taux_cs_emp_t4","taux_cs_emp_t5","tx_exo_fillon_smic",
+                         "plafond_exo_fillon","taux_are_comp","taux_are_red","taux_are_deduc","taux_are_ret",
+                         "rap_salnet_are","assiette_PS_ARE","seuil_exoARE_cot_ret","seuil_exoARE_csg","seuil_exo_csg",
+                         "seuil_exo_csg_sup_partQF","seuil_tx_red_csg","seuil_tx_red_csg_sup_partQF","montant_th_1pers",
+                         "mont_th_couple","contrib_audiovisuel","seuil_degrev_th_max_1p","supp_th_max_2demipart","supp_th_max_demipartsup",
+                         "seuil_degrev_th_deg_1p","supp_th_deg_2demipart","supp_th_deg_demipartsup","degr_th_max","degr_th_partiel","abatt_rfr","smic_n","smic_b",
+                         "smic_b_horaire","tps_trav_hebdo","deflat","deflat_n_1","deflat_n_2","deflat_2","s_deflat","s_deflat_n_1",
+                         "s_deflat_n_2","s_deflat_2","seuil_D1","seuil_D2","seuil_D3","seuil_D4","seuil_D5","seuil_D6","seuil_D7",
+                         "seuil_D8","seuil_D9"),
+                  
+                    "21"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_enf12","tx_majo_rsa_enf3",
                          "mont_forfaitaire_rsa_maj","tx_majo_rsa_majo_enf12","tx_majo_rsa_majo_enf3",
                          "forf_logement_rsa_1","forf_logement_rsa_2","forf_logement_rsa_3", "noel_1pers",
                          "noel_2pers","noel_3pers","noel_isole_4pers","noel_couple_4pers","noel_pers_sup",
@@ -87,8 +131,7 @@ var_names <- list("21"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_
                          "noel_ASS","taux_ir_t1","plafond_ir_t1","taux_ir_t2","plafond_ir_t2", "taux_ir_t3","plafond_ir_t3",
                          "taux_ir_t4","plafond_ir_t4","taux_ir_t5","Decote_taux","mont_decote_celib","mont_decote_couple",
                          "plafond_qf","plaf_qf_monoparent", "IR_abatt_frais","IR_abatt_plancher","IR_abatt_plafond","seuil_recouvrement_IR",
-                         "seuil_recouvrement_IR_apres_credits","plaf1_RI","plaf1_RI_couple","plaf2_RI","plaf2_RI_couple",
-                         "RI_demipart","tx_RI","plafond_ss","tx_csg_tot", "tx_csg_deduc","CSG_abatt_frais","tx_crds",
+                         "seuil_recouvrement_IR_apres_credits","plafond_ss","tx_csg_tot", "tx_csg_deduc","CSG_abatt_frais","tx_crds",
                          "taux_csgcrds_nondeduc_t1","taux_csgcrds_nondeduc_t2","taux_csg_deduc_t1",
                          "taux_csg_deduc_t2","sal_maladie", "sal_vieillesse_tot","sal_vieillesse_t1",
                          "sal_chomage","sal_retraites_comp_t1","sal_retraites_comp_t2","sal_retraites_comp_cet","taux_cs_sal_t1",
@@ -99,9 +142,8 @@ var_names <- list("21"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_
                          "plafond_exo_fillon","taux_are_comp","taux_are_red","taux_are_deduc","taux_are_ret",
                          "rap_salnet_are","assiette_PS_ARE","seuil_exoARE_cot_ret","seuil_exoARE_csg","seuil_exo_csg",
                          "seuil_exo_csg_sup_partQF","seuil_tx_red_csg","seuil_tx_red_csg_sup_partQF","montant_th_1pers",
-                         "mont_th_couple","contrib_audiovisuel","plaf_th_base","plaf_th_1demipart","plaf_th_demipartsup",
-                         "abt_th_base","abt_th_4demipart","abt_th_demipartsup","tx_degrevement_th","seuil_degrev_th_max_1p","supp_th_max_2demipart","supp_th_max_demipartsup",
-                         "seuil_degrev_th_deg_1p","supp_th_deg_2demipart","supp_th_deg_demipartsup","degr_th_max","abatt_rfr","smic_n","smic_b",
+                         "mont_th_couple","contrib_audiovisuel","seuil_degrev_th_max_1p","supp_th_max_2demipart","supp_th_max_demipartsup",
+                         "seuil_degrev_th_deg_1p","supp_th_deg_2demipart","supp_th_deg_demipartsup","degr_th_max","degr_th_partiel","abatt_rfr","smic_n","smic_b",
                          "smic_b_horaire","tps_trav_hebdo","deflat","deflat_n_1","deflat_n_2","deflat_2","s_deflat","s_deflat_n_1",
                          "s_deflat_n_2","s_deflat_2","seuil_D1","seuil_D2","seuil_D3","seuil_D4","seuil_D5","seuil_D6","seuil_D7",
                          "seuil_D8","seuil_D9"),
@@ -134,8 +176,7 @@ var_names <- list("21"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_
                          "noel_ASS","taux_ir_t1","plafond_ir_t1","taux_ir_t2","plafond_ir_t2", "taux_ir_t3","plafond_ir_t3",
                          "taux_ir_t4","plafond_ir_t4","taux_ir_t5","Decote_taux","mont_decote_celib","mont_decote_couple",
                          "plafond_qf","plaf_qf_monoparent", "IR_abatt_frais","IR_abatt_plancher","IR_abatt_plafond","seuil_recouvrement_IR",
-                         "seuil_recouvrement_IR_apres_credits","plaf1_RI","plaf1_RI_couple","plaf2_RI","plaf2_RI_couple",
-                         "RI_demipart","tx_RI","plafond_ss","tx_csg_tot", "tx_csg_deduc","CSG_abatt_frais","tx_crds",
+                         "seuil_recouvrement_IR_apres_credits","plafond_ss","tx_csg_tot", "tx_csg_deduc","CSG_abatt_frais","tx_crds",
                          "taux_csgcrds_nondeduc_t1","taux_csgcrds_nondeduc_t2","taux_csg_deduc_t1",
                          "taux_csg_deduc_t2","sal_maladie", "sal_vieillesse_tot","sal_vieillesse_t1",
                          "sal_chomage","sal_retraites_comp_t1","sal_retraites_comp_t2","sal_retraites_comp_cet","taux_cs_sal_t1",
@@ -146,8 +187,7 @@ var_names <- list("21"=c("mont_forfaitaire_rsa","tx_majo_rsa_pac1","tx_majo_rsa_
                          "plafond_exo_fillon","taux_are_comp","taux_are_red","taux_are_deduc","taux_are_ret",
                          "rap_salnet_are","assiette_PS_ARE","seuil_exoARE_cot_ret","seuil_exoARE_csg","seuil_exo_csg",
                          "seuil_exo_csg_sup_partQF","seuil_tx_red_csg","seuil_tx_red_csg_sup_partQF","montant_th_1pers",
-                         "mont_th_couple","contrib_audiovisuel","plaf_th_base","plaf_th_1demipart","plaf_th_demipartsup",
-                         "abt_th_base","abt_th_4demipart","abt_th_demipartsup","tx_degrevement_th","seuil_degrev_th_max_1p","supp_th_max_2demipart","supp_th_max_demipartsup",
+                         "mont_th_couple","contrib_audiovisuel","seuil_degrev_th_max_1p","supp_th_max_2demipart","supp_th_max_demipartsup",
                          "seuil_degrev_th_deg_1p","supp_th_deg_2demipart","supp_th_deg_demipartsup","degr_th_max","abatt_rfr","smic_n","smic_b",
                          "smic_b_horaire","tps_trav_hebdo","deflat","deflat_n_1","deflat_n_2","deflat_2","s_deflat","s_deflat_n_1",
                          "s_deflat_n_2","s_deflat_2","seuil_D1","seuil_D2","seuil_D3","seuil_D4","seuil_D5","seuil_D6","seuil_D7",
@@ -467,8 +507,6 @@ modif_df <- function(dataframe,varnames){
 } 
 
 
-
- 
 
 
 

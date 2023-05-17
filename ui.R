@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Copyright (C) 2021. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
 #
 # Nom du dernier auteur : Camille Dufour, Drees.
 #
@@ -8,7 +8,7 @@
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 08/11/2021 avec la version 4.0.5 de R.
+# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -164,7 +164,7 @@ ui <-
                             <div> <br> </div> </footer>"),
              
              ######################### 1er onglet #########################
-                 tabPanel("Guide d'utilisation",icon = icon("info-circle"),
+                 tabPanel("Guide d'utilisation",icon = icon("circle-info"),
                           
                           fluidPage(
                             useShinydashboard(),
@@ -172,31 +172,31 @@ ui <-
                             column(10,align="justify",
                                    h1("Guide d'usage de la maquette EDIFIS"),
                                    h3("Objectif"),
-                                   p(HTML("L'objectif est d'estimer le revenu disponible mensuel d'un ménage-type (notamment à configuration familiale donnée) en fonction du salaire de la personne de référence. 
-                                      La maquette présente au choix les résultats de la législation en vigueur au 01/07 des années 2015 à 2021 sur le champ des prélèvements et des prestations légales. 
+                                   p(HTML("L'objectif est d'estimer le revenu disponible mensuel d'un ménage-type en fonction du salaire de la personne de référence. 
+                                      La maquette présente au choix les résultats de la législation en vigueur au 01/07 des années 2015 à 2022 sur le champ des prélèvements et des prestations légales. 
                                       <br/>La maquette met en évidence les effets redistributifs stylisés du système socio-fiscal par type de ménage. 
                                           Attention, elle ne prend pas en compte le poids des types de ménage dans la population totale  donc elle ne permet pas d'en déduire directement les effets redistributifs agrégés 
-                                          sur la population totale ni de simuler des droits individuels.")),
+                                          sur la population totale, ni de simuler des droits individuels.")),
                                    h3("Procédure pour générer des cas-types"),
-                                   p("La première étape consiste à choisir les paramètres d'année législative et de caractéristiques du ménage dans l'onglet 'Choix des paramètres', accessible en cliquant dessus."),
+                                   p("La première étape consiste à choisir les paramètres d'année législative et de caractéristiques du ménage dans l'onglet 'Choix des paramètres'."),
                                    p("Une fois les paramètres choisis, l'onglet 'Table de données' restitue
                                       un tableau dont chaque ligne correspond à un niveau de salaire et dont les colonnes présentent les revenus et 
-                                     transferts associés pour le type de ménage défini dans l'onglet précédent. L'exportation du tableau vers un fichier excel est possible en cliquant sur le 
+                                     transferts associés pour le type de ménage défini dans l'onglet précédent. L'exportation du tableau vers un fichier csv est possible en cliquant sur le 
                                      bouton 'Télécharger le tableau'."),
                                    p("Enfin, le dernier onglet 'Sorties graphiques' permet de visualiser le montant de certaines prestations en fonction des revenus nets de la personne de référence. Les graphiques sont exportables en cliquant sur les boutons de téléchargement."),
                                    h3("Socle d'hypothèses"),
                                    p("Le ménage conserve les mêmes revenus au cours des trois années précédentes (en euros constants). La personne de référence et son éventuel conjoint sont par hypothèse d’âge actif entre 25 et 65 ans. Le cas des enfants de plus de 20 ans est exclu. Lorsqu'ils travaillent, les individus sont salariés en milieu ordinaire."),
                                    p("Par souci de simplification, certains paramètres de la législation ne sont pas pris en compte. Les principales hypothèses simplificatrices sont listées ici :"),
                                    p("- Les cotisations sociales : le barème d'un salarié non cadre en CDI est appliqué."),
-                                   p("- L'impôt sur le revenu : l’ensemble des revenus paramétrés dans la maquette sont soumis au barème (pas d’impôt à taux proportionnel, ni de réductions ou crédits d’impôts). A partir de 2019, année de mise en place du prélèvement à la source, l'impôt simulé est celui dû au titre des revenus contemporains."),
+                                   p("- L'impôt sur le revenu : l’ensemble des revenus paramétrés dans la maquette sont soumis au barème (pas d’impôt à taux proportionnel, ni de réductions ou crédits d’impôt). A partir de 2019, année de mise en place du prélèvement à la source, l'impôt simulé est celui dû au titre des revenus contemporains."),
                                    p("- La taxe d'habitation : les montants avant dégrèvement sont des montants fixes moyens par situation conjugale."),
-                                   p("- Les transitions de revenus : du fait de l'absence de transitions, les mécanismes de neutralisations/abattements associés pour les prestations familiales et les aides aux logements ne s'appliquent pas."),
-                                   p("- Les prestations familiales : celles dédiées à la garde des enfants ne sont pas modélisées (ni le complément de libre choix du mode de garde (Cmg) ni la prestation partagée d’éducation de l’enfant PreParE)."),
-                                   p("- Les allocations logement : les ménages sont éligibles à l’aide au logement en zone 2 au loyer plafond sous réserve de satisfaire aux conditions de ressources. Les « allocations logement accession » sont exclues de l'analyse."),
+                                   p("- Les transitions de revenus : du fait de l'absence de transitions, les mécanismes de neutralisations/abattements associés pour les prestations familiales et les aides au logement ne s'appliquent pas."),
+                                   p("- Les prestations familiales : celles dédiées à la garde des enfants ne sont pas modélisées (ni le complément de libre choix du mode de garde (Cmg), ni la prestation partagée d’éducation de l’enfant (PreParE))."),
+                                   p("- Les aides au logement : les ménages sont locataires du parc privé en zone 2 au loyer plafond et donc éligibles aux aides au logement sous réserve de satisfaire aux conditions de ressources. Les « aides au logement accession » sont exclues de l'analyse."),
                                    p("- Le recours : le recours est automatique pour toutes les prestations."),
-                                   p("- L'année 2020 : les revalorisations exceptionnelles d'ARS, de RSA, d'ASS et d'AL liées au Covid et a priori ponctuelles ne sont pas incluses."),
+                                   p("- A partir de 2020 : les revalorisations exceptionnelles d'ARS, de RSA, d'ASS et d'AL en 2020 puis l'indemnité inflation en 2021 et 2022 versées ponctuellement ne sont pas incluses."),
                                    h3("Le code en libre accès"),
-                                   a(href = "https://gitlab.com/DREES_code/public/outils", "Bientôt disponible ici."),
+                                   a(href = "https://gitlab.com/DREES_code/public/outils", "Disponible ici."),
                                    HTML("<br><br>")
                                    ),
                             column(4)
@@ -204,10 +204,10 @@ ui <-
                           ),
              
              ######################### 2e onglet #########################
-                 tabPanel(title="Choix des paramètres",value="panel1",icon = icon("list-alt"),
+                 tabPanel(title="Choix des paramètres",value="panel1",icon = icon("gear"),
                           fluidPage(
-                            column(6,
-                                   sliderInput("year","Année de législation",min=2015,max=2021,value=2021,step=1,sep=""),
+                            column(4,
+                                   sliderInput("year","Année de législation",min=2015,max=2022,value=2022,step=1,sep=""),
                                    h3("Echelle de revenus de la personne de référence (PR)"),
                                    p("La maquette calcule le revenu disponible d'un ménage-type, pour des revenus de la personne de référence allant de 
                                      0 à une valeur maximale suivant un pas à paramétrer."),
@@ -296,7 +296,7 @@ ui <-
                                    selectInput(inputId="n16",label="Handicap au sens de l'AAH", choices=c("Non"=0,"Oui avec un taux d'incapacité compris entre 50% et 80%"=1,"Oui avec un taux d'incapacité supérieur à 80%"=2),selected=0),
                                    conditionalPanel(condition="input.n1>1",
                                                     selectInput(inputId="n17",label="Handicap du conjoint au sens de l'AAH", choices=c("Non"=0,"Oui avec un taux d'incapacité compris entre 50% et 80%"=1,"Oui avec un taux d'incapacité supérieur à 80%"=2),selected=0)),
-                                   h3("Divers"),
+                                   h3("Autres"),
                                    selectInput(inputId="n18",label="Parent isolé au sens du RSA et de la PA", choices=c("Non"=0,"Oui"=1),selected=0),
                                    selectInput(inputId="n19",label="Droit à l'allocation de soutien familial (ASF)", choices=c("Non"=0,"Oui"=1),selected=0),
                                    selectInput(inputId="n20",label="Statut d'occupation du logement", choices=c("Locataire en zone 2"=0,"Propriétaire non accédant ou logé gratuitement"=1),selected=0),
@@ -520,11 +520,38 @@ ui <-
                                                          multiple = TRUE),
                                              pickerInput("revdisp21","Revenus disponibles",rev_disp21,
                                                          selected=c("Total des prestations","Total des impôts","Revenu disponible"),
-                                                         multiple = TRUE))
-                            , width = 3),
+                                                         multiple = TRUE)
+                            ),
+                            conditionalPanel(condition="input.year==2022 & input.n2000==0",
+                                             pickerInput("rev220","Revenus primaires",rev22,
+                                                         selected=c("Salaire brut en % du Smic brut temps plein (PR)","Salaire net (PR)",
+                                                                    "Total des revenus primaires du ménage",`selected-text-format` = "count > 3"),
+                                                         multiple = TRUE)),
+                            conditionalPanel(condition="input.year==2022 & input.n2000==1",
+                                             pickerInput("rev221","Revenus primaires",rev22,
+                                                         selected=c("ARE nette (PR)","Total des revenus primaires du ménage",`selected-text-format` = "count > 3"),
+                                                         multiple = TRUE)),
+                            conditionalPanel(condition="input.year==2022",
+                                             pickerInput("prevsoc22","Prélèvements sociaux",prelevements_soc22,
+                                                         multiple = TRUE),
+                                             pickerInput("impotax22","Impôts",impot_tax22,
+                                                         multiple = TRUE),
+                                             pickerInput("minsoc22","Minima sociaux et prime d'activité",min_soc22,
+                                                         multiple = TRUE),
+                                             pickerInput("pf22",HTML("Prestations familiales <br/> (hors aides à la garde)"),pf_22,
+                                                         multiple = TRUE),
+                                             pickerInput("alloclog22",HTML("Allocations logement <br/> des locataires"),alloc_log22,
+                                                         multiple = TRUE),
+                                             pickerInput("revdisp22","Revenus disponibles",rev_disp22,
+                                                         selected=c("Total des prestations","Total des impôts","Revenu disponible"),
+                                                         multiple = TRUE)
+                            ),
+                            
+                            
+                          width = 3),
                             mainPanel(
                               div(style="display: inline-block; vertical-align:top; width: 700px;",infoBox(title="Rappel des principaux paramètres", subtitle=htmlOutput("parameters1"),
-                                                                                                          icon =icon("list-alt"),
+                                                                                                          icon =icon("gear"),
                                                                                                           color ="blue" ,
                                                                                                           width=14,
                                                                                                           fill=FALSE)),
@@ -540,7 +567,7 @@ ui <-
                  
              ######################### 4e onglet ########################## 
                       tabPanel("Sorties graphiques",
-                      icon = icon("bar-chart-o"),
+                      icon = icon("square-poll-vertical"),
                       fluidPage(
                         useShinydashboard(),
                           fluidRow(
@@ -631,13 +658,25 @@ ui <-
                                                             pickerInput("show_area211",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
                                                                         choices=measure_vars1[["21"]],
                                                                         selected=measure_vars1[["21"]],
+                                                                        multiple = TRUE)
+                                           ),
+                                           conditionalPanel(condition="input.year==2022 & input.n2000==0",
+                                                            pickerInput("show_area220",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
+                                                                        choices=measure_vars0[["22"]],
+                                                                        selected=measure_vars0[["22"]],
+                                                                        multiple = TRUE)                 
+                                           ),
+                                           conditionalPanel(condition="input.year==2022 & input.n2000==1",
+                                                            pickerInput("show_area221",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
+                                                                        choices=measure_vars1[["22"]],
+                                                                        selected=measure_vars1[["22"]],
                                                                         multiple = TRUE)),
         
                                width = 3),
                               
                               mainPanel(
                                 div(style="display: inline-block;vertical-align:top; width: 700px;",infoBox(title="Rappel des principaux paramètres", subtitle=htmlOutput("parameters"),
-                                                                                                            icon =icon("list-alt"),
+                                                                                                            icon =icon("gear"),
                                                                                                             color ="blue" ,
                                                                                                             width=14,
                                                                                                             fill=FALSE))

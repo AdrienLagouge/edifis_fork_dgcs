@@ -7736,6 +7736,50 @@ footer {
   margin-bottom: 20px;
 }
 
+#bs-select-71-2,/*2022 RA % smic brut*/
+#bs-select-71-6,/*2022 RA nets*/
+#bs-select-71-10,/*2022 Salaire net du conjoint*/
+#bs-select-71-11,/*2022 ARE nette du conjoint*/
+#bs-select-71-12,/*2022 Autres revenus*/
+#bs-select-71-13,/*2022 Total des RP du ménage*/
+
+#bs-select-73-5,/*2022 Total prélèvements sociaux*/
+
+#bs-select-72-3,/*2022 ARE nette PP*/
+#bs-select-72-10,/*2022 Salaire net du conjoint*/
+#bs-select-72-11,/*2022 ARE nette du conjoint*/
+#bs-select-72-12,/*2022 Autres revenus*/
+#bs-select-72-13,/*2022 Total des RP du ménage*/
+
+#bs-select-74-11, /* 2022 IR*/
+#bs-select-74-14, /* 2022 Montant de TH*/
+#bs-select-74-15, /* 2022 Total impôts*/
+
+#bs-select-75-3,/* 2022 AAH Montant (PR) */
+#bs-select-75-9,/* 2022 Max ASS,AAh du conjoint */
+#bs-select-75-12,/* 2022 RSA - Montant */
+#bs-select-75-19,/* 2022 PA - Montant total */
+#bs-select-75-14,/* 2022 Prime de noël */
+#bs-select-75-22,/* 2022 Chèque énergie */
+#bs-select-75-23, /* 2022 Total minima sociaux et PA */
+#bs-select-75-24, /* 2022 Total minima sociaux et PA (y compris énergie) */
+
+#bs-select-76-0, /* 2022 Allocations familiales */
+#bs-select-76-3, /* 2022 CF Montant */
+#bs-select-76-4,/* 2022 ASF */
+#bs-select-76-7,/* 2022 AB Paje */
+#bs-select-76-8,/* 2022 ARS */
+#bs-select-76-9,/* 2022 Total des PF */
+
+#bs-select-77-1,/* 2022 AL Montant */
+
+#bs-select-78-2,/* 2022 Total des prestations*/
+#bs-select-78-3,/* 2022 Total des prélèvements*/
+#bs-select-78-4,/* 2022 Rev Disp */
+#bs-select-78-9,/* 2022 Rev disp ajusté */
+
+
+
 
 #bs-select-63-2,/*2021 RA % smic brut*/
 #bs-select-63-6,/*2021 RA nets*/
@@ -7752,9 +7796,9 @@ footer {
 #bs-select-64-12,/*2021 Autres revenus*/
 #bs-select-64-13,/*2021 Total des RP du ménage*/
 
-#bs-select-66-12, /* 2021 IR*/
-#bs-select-66-17, /* 2021 Montant de TH*/
-#bs-select-66-18, /* 2021 Total impôts*/
+#bs-select-66-11, /* 2021 IR*/
+#bs-select-66-14, /* 2021 Montant de TH*/
+#bs-select-66-15, /* 2021 Total impôts*/
 
 #bs-select-67-3,/* 2021 AAH Montant (PR) */
 #bs-select-67-9,/* 2021 Max ASS,AAh du conjoint */

@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Copyright (C) 2021. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
 #
 # Nom du dernier auteur : Camille Dufour, Drees.
 #
@@ -8,7 +8,7 @@
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 08/11/2021 avec la version 4.0.5 de R.
+# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/

@@ -14,6 +14,7 @@ Pour lancer l'application, il faut télécharger l'ensemble du dossier sur son p
 
 Lien vers l'application en ligne : https://drees.shinyapps.io/Drees_Maquette_Edifis/
 
-La Direction de la recherche, des études, de l'évaluation et des statistiques (DREES) est le service statistique ministériel des ministères sanitaires et sociaux, et une direction de l'administration centrale de ces ministères. https://drees.solidarites-sante.gouv.fr/article/presentation-de-la-drees
+La Direction de la recherche, des études, de l’évaluation et des statistiques (Drees) est une direction de l’administration centrale des ministères sanitaires et sociaux. 
+https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/la-drees/qui-sommes-nous/ 
 
-Les programmes ont été exécutés pour la dernière fois avec le logiciel R version 4.0.5, le 08/11/2021.
+Les programmes ont été exécutés pour la dernière fois avec le logiciel R version 4.1.2, le 14/10/2022.
