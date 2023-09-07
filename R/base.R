@@ -175,7 +175,7 @@ choix_input <<- function(n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n15,n16,n17,n18,n
   eligible_asf <<- pmin(n19,1)
   proprietaire <<- pmin(n20,1) # menage proprietaire (non accedant) ou heberge gratuitement
   
-  n <<- (max(c(n21,n13))%/%max(c(n22,n12)))+2 #calcul du nombre de lignes de l'échelle de revenus
+  nn <<- (max(c(n21,n13))%/%max(c(n22,n12)))+2 #calcul du nombre de lignes de l'échelle de revenus
 
 #############################################################################################
 ######################## Parametres calcules (ne pas modifier) ##############################
