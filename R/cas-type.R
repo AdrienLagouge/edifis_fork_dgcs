@@ -93,7 +93,7 @@ print(bareme_var[["seuil_D1"]])
 
   #ARE nette
   if (year>14){
-    ARE_net <- vector("numeric",n) 
+    ARE_net <- vector("numeric",nn) 
     for (i in 2:length(ARE_net)){
       ARE_net[i]=ARE_net[i-1]+pas_are
       }
@@ -102,8 +102,8 @@ print(bareme_var[["seuil_D1"]])
     sal_ref_net <- ARE_net/bareme_var[["rap_salnet_are"]]
       
   } else {
-    ARE_net <- vector("numeric",n)
-    sal_ref_net <- vector("numeric",n)
+    ARE_net <- vector("numeric",nn)
+    sal_ref_net <- vector("numeric",nn)
   }
     
   
@@ -145,11 +145,11 @@ print(bareme_var[["seuil_D1"]])
   if (year<16){
     
     # Temps de travail PPE
-    ppe_tps_trav <- vector("character",n)
+    ppe_tps_trav <- vector("character",nn)
     ppe_tps_trav <- ifelse(perc_smic_net_tpsplein<50,"Tps partielc",ifelse(perc_smic_net_tpsplein<100,"Tps partiell","Tps plein"))
 
     # Eligibilite RFR
-    ppe_elig_rfr <- vector("numeric",n)
+    ppe_elig_rfr <- vector("numeric",nn)
     # ppe_elig_rfr <- SI((0.9*(rev_act_dec+sal_declar_conj+autres_rev)/(1+bareme_var[["deflat"]]))>plaf_rfr_ppe,0,1)
     ppe_elig_rfr <- SI((0.9*(rev_act_dec+autres_rev+sal_ref_net+sal_declar_conj+sal_ref_conj_are)/(1+bareme_var[["deflat"]]))>plaf_rfr_ppe,0,1)
 
@@ -163,7 +163,7 @@ print(bareme_var[["seuil_D1"]])
                                     0)))
      ppe_declar_tps_plein[1]<-0 #nécessaire car division par tps_trav_net = 0 sinon
 
-     if (all(rev_act_dec==rep(0,n))){ppe_declar_tps_plein<-0} #nécessaire pour les mm raisons (correspond au cas où l'individu est à l'ARE)
+     if (all(rev_act_dec==rep(0,nn))){ppe_declar_tps_plein<-0} #nécessaire pour les mm raisons (correspond au cas où l'individu est à l'ARE)
 
     # Prime individuelle
     
@@ -178,7 +178,7 @@ print(bareme_var[["seuil_D1"]])
         )*ppe_declar_tps_plein
 
     # PPE conjoint si temps plein
-    ppe_conj_tps_plein <- vector("numeric",n)
+    ppe_conj_tps_plein <- vector("numeric",nn)
     if (nb_adultes>1 && sal_brut_conjoint>0){
       ppe_conj_tps_plein <- (ppe_elig_rfr==1)*
         SI(sal_net_conj/(1+bareme_var[["deflat"]])<bareme_var[["min_ppe"]],
@@ -189,7 +189,7 @@ print(bareme_var[["seuil_D1"]])
                  (bareme_var[["max_ppe"]]-(sal_net_conj/((1+bareme_var[["deflat"]])*tps_trav_conjoint)))*bareme_var[["tx_ppe_apres"]],
                  0)))
     } else {
-      ppe_conj_tps_plein <- rep(0,n)
+      ppe_conj_tps_plein <- rep(0,nn)
     }
     
     # Prime individuelle conjoint
@@ -242,15 +242,15 @@ print(bareme_var[["seuil_D1"]])
     ppe_tot_avRSA <- ppe_prime_indiv+ppe_prime_conj+ppe_majo_monoact+ppe_majo_PAC
       
 } else {
-    ppe_tps_trav <- vector("character",n)
-    ppe_elig_rfr <- vector("numeric",n)
-    ppe_declar_tps_plein <- vector("numeric",n)
-    ppe_prime_indiv <- vector("numeric",n)
-    ppe_conj_tps_plein <- vector("numeric",n)
-    ppe_prime_conj <- vector("numeric",n)
-    ppe_majo_monoact <- vector("numeric",n)
-    ppe_majo_PAC <- vector("numeric",n)
-    ppe_tot_avRSA <- vector("numeric",n)
+    ppe_tps_trav <- vector("character",nn)
+    ppe_elig_rfr <- vector("numeric",nn)
+    ppe_declar_tps_plein <- vector("numeric",nn)
+    ppe_prime_indiv <- vector("numeric",nn)
+    ppe_conj_tps_plein <- vector("numeric",nn)
+    ppe_prime_conj <- vector("numeric",nn)
+    ppe_majo_monoact <- vector("numeric",nn)
+    ppe_majo_PAC <- vector("numeric",nn)
+    ppe_tot_avRSA <- vector("numeric",nn)
   }
    
 
@@ -306,9 +306,9 @@ print(bareme_var[["seuil_D1"]])
     
     
   } else {
-    br_conj_AAH <- vector("numeric",n)
-    mont_conj_AAH <- vector("numeric",n)
-    max_aah_ass_conj <- vector("numeric",n)
+    br_conj_AAH <- vector("numeric",nn)
+    mont_conj_AAH <- vector("numeric",nn)
+    max_aah_ass_conj <- vector("numeric",nn)
   }
 
   ######################################
@@ -343,7 +343,7 @@ print(bareme_var[["seuil_D1"]])
     
     rev_impo_n_2 <- (rev_act_dec+autres_rev+sal_declar_conj)*0.9/(1+bareme_var[["deflat_2"]])
     
-    revimp_n_2_abatt <- vector("numeric",n)
+    revimp_n_2_abatt <- vector("numeric",nn)
     
   }
     
@@ -402,7 +402,7 @@ print(bareme_var[["seuil_D1"]])
     } else {
     
     # Abattements AL (abattements biactif non present dans les baremes de 2013 à 2014)
-    BR_AL <- vector("numeric",n)
+    BR_AL <- vector("numeric",nn)
     
     # AL
     AL <- SI(pmax(0,al_LC-(al_PO+12*(al_TF+bareme_var[["al_taux_compl"]])*pmax(0,(rev_act_dec+sal_declar_conj+autres_rev)*0.9/(1+bareme_var[["deflat_2"]])-al_RO)))*(1-bareme_var[["tx_crds"]])>= bareme_var[["seuil_versement_AL"]],
@@ -452,7 +452,7 @@ print(bareme_var[["seuil_D1"]])
               bareme_var[["plafond_simple_CF"]] + pmax(nb_enfants-3,0)*bareme_var[["pers_sup_CF"]]
     )
     
-    plaf_CF_majo <- vector("numeric",n)
+    plaf_CF_majo <- vector("numeric",nn)
     
     # Montant
     
@@ -517,7 +517,7 @@ print(bareme_var[["seuil_D1"]])
               bareme_var[["plaf_simple_paje_plein"]] + pmin(nb_enfants,2)*bareme_var[["plafond_sup_enf_12_paje_plein"]] + pmax(nb_enfants-3,0)*bareme_var[["plafond_sup_enf_3_paje_plein"]]
     )
     
-    plaf_AB_plein <- vector("numeric",n)
+    plaf_AB_plein <- vector("numeric",nn)
     
     mont_AB_paje <- SI((rev_act_dec*0.9/(1+bareme_var[["deflat_2"]]))<plaf_AB_partiel,
               bareme_var[["montant_paje_plein"]]*nb_enft_3,
@@ -584,12 +584,12 @@ print(bareme_var[["seuil_D1"]])
     
   } else {
     
-    br_AAH <- vector("numeric",n)
-    mont_AAH <- vector("numeric",n)
-    mva <- vector("numeric",n)
-    mva_conj <- vector("numeric",n)
-    AAH_tot <- vector("numeric",n)
-    max_aah_ass_conj <- vector("numeric",n)
+    br_AAH <- vector("numeric",nn)
+    mont_AAH <- vector("numeric",nn)
+    mva <- vector("numeric",nn)
+    mva_conj <- vector("numeric",nn)
+    AAH_tot <- vector("numeric",nn)
+    max_aah_ass_conj <- vector("numeric",nn)
   }
   
   
@@ -699,10 +699,10 @@ mont_PA <- (recours_PA==1 | mont_RSA>0)*SI((vecteur + sal_net_conj > 0)*((mf_PA+
     bonus_servi <- pmin(bonus_pa,mont_PA)
  
   } else {
-    br_pa <- vector("numeric",n)
-    bonus_pa <- vector("numeric",n)
-    bonus_servi  <- vector("numeric",n)
-    mont_PA <- vector("numeric",n)
+    br_pa <- vector("numeric",nn)
+    bonus_pa <- vector("numeric",nn)
+    bonus_servi  <- vector("numeric",nn)
+    mont_PA <- vector("numeric",nn)
   }
   
   ############################################
@@ -835,7 +835,7 @@ mont_PA <- (recours_PA==1 | mont_RSA>0)*SI((vecteur + sal_net_conj > 0)*((mf_PA+
       
     } else {
       
-      RI_2017 <- vector("numeric",length=n)
+      RI_2017 <- vector("numeric",length=nn)
     }
     
     # Impot apres decote et reduction d'impot
@@ -860,7 +860,7 @@ mont_PA <- (recours_PA==1 | mont_RSA>0)*SI((vecteur + sal_net_conj > 0)*((mf_PA+
       } 
       
     } else {
-      imp_ppe_recouvr <- rep(0,n)
+      imp_ppe_recouvr <- rep(0,nn)
     }
     
    return(c(rfr,rfr_par_part,imp_par_part,imp_tot,rev_imp_part,imp_part_sansdemi,imp_tot_sansdemi,avantage_qf,imp_plaf_qf,decote,RI_2017,imp_decote_RI,imp_recouvr,imp_ppe_recouvr))
@@ -890,39 +890,39 @@ mont_PA <- (recours_PA==1 | mont_RSA>0)*SI((vecteur + sal_net_conj > 0)*((mf_PA+
     
     if (n0==3){
   
-      rfr<-sorties_IR1[1:n]+sorties_IR2[1:n]
-      rfr_par_part<-sorties_IR1[(n+1):(2*n)]+sorties_IR2[(n+1):(2*n)]
-      imp_par_part<-sorties_IR1[(2*n+1):(3*n)]+sorties_IR2[(2*n+1):(3*n)]
-      imp_tot<-sorties_IR1[(3*n+1):(4*n)]+sorties_IR2[(3*n+1):(4*n)]
-      rev_imp_part<-sorties_IR1[(4*n+1):(5*n)]+sorties_IR2[(4*n+1):(5*n)]
-      imp_part_sansdemi<-sorties_IR1[(5*n+1):(6*n)]+sorties_IR2[(5*n+1):(6*n)]
-      imp_tot_sansdemi<-sorties_IR1[(6*n+1):(7*n)]+sorties_IR2[(6*n+1):(7*n)]
-      avantage_qf<-sorties_IR1[(7*n+1):(8*n)]+sorties_IR2[(7*n+1):(8*n)]
-      imp_plaf_qf<-sorties_IR1[(8*n+1):(9*n)]+sorties_IR2[(8*n+1):(9*n)]
-      decote<-sorties_IR1[(9*n+1):(10*n)]+sorties_IR2[(9*n+1):(10*n)]
-      RI_2017<-sorties_IR1[(10*n+1):(11*n)]+sorties_IR2[(10*n+1):(11*n)]
-      imp_decote_RI<-sorties_IR1[(11*n+1):(12*n)]+sorties_IR2[(11*n+1):(12*n)]
-      imp_recouvr<-sorties_IR1[(12*n+1):(13*n)]+sorties_IR2[(12*n+1):(13*n)]
-      imp_ppe_recouvr<-sorties_IR1[(13*n+1):(14*n)]+sorties_IR2[(13*n+1):(14*n)]
+      rfr<-sorties_IR1[1:nn]+sorties_IR2[1:nn]
+      rfr_par_part<-sorties_IR1[(nn+1):(2*nn)]+sorties_IR2[(nn+1):(2*nn)]
+      imp_par_part<-sorties_IR1[(2*nn+1):(3*nn)]+sorties_IR2[(2*nn+1):(3*nn)]
+      imp_tot<-sorties_IR1[(3*nn+1):(4*nn)]+sorties_IR2[(3*nn+1):(4*nn)]
+      rev_imp_part<-sorties_IR1[(4*nn+1):(5*nn)]+sorties_IR2[(4*nn+1):(5*nn)]
+      imp_part_sansdemi<-sorties_IR1[(5*nn+1):(6*nn)]+sorties_IR2[(5*nn+1):(6*nn)]
+      imp_tot_sansdemi<-sorties_IR1[(6*nn+1):(7*nn)]+sorties_IR2[(6*nn+1):(7*nn)]
+      avantage_qf<-sorties_IR1[(7*nn+1):(8*nn)]+sorties_IR2[(7*nn+1):(8*nn)]
+      imp_plaf_qf<-sorties_IR1[(8*nn+1):(9*nn)]+sorties_IR2[(8*nn+1):(9*nn)]
+      decote<-sorties_IR1[(9*nn+1):(10*nn)]+sorties_IR2[(9*nn+1):(10*nn)]
+      RI_2017<-sorties_IR1[(10*nn+1):(11*nn)]+sorties_IR2[(10*nn+1):(11*nn)]
+      imp_decote_RI<-sorties_IR1[(11*nn+1):(12*nn)]+sorties_IR2[(11*nn+1):(12*nn)]
+      imp_recouvr<-sorties_IR1[(12*nn+1):(13*nn)]+sorties_IR2[(12*nn+1):(13*nn)]
+      imp_ppe_recouvr<-sorties_IR1[(13*nn+1):(14*nn)]+sorties_IR2[(13*nn+1):(14*nn)]
       
-      av_QC<-sorties_IR1[(12*n+1):(13*n)]+sorties_IR2[(12*n+1):(13*n)]-sorties_IR[(12*n+1):(13*n)]
+      av_QC<-sorties_IR1[(12*nn+1):(13*nn)]+sorties_IR2[(12*nn+1):(13*nn)]-sorties_IR[(12*nn+1):(13*nn)]
       
     }else {
   
-      rfr<-sorties_IR[1:n]
-      rfr_par_part<-sorties_IR[(n+1):(2*n)]
-      imp_par_part<-sorties_IR[(2*n+1):(3*n)]
-      imp_tot<-sorties_IR[(3*n+1):(4*n)]
-      rev_imp_part<-sorties_IR[(4*n+1):(5*n)]
-      imp_part_sansdemi<-sorties_IR[(5*n+1):(6*n)]
-      imp_tot_sansdemi<-sorties_IR[(6*n+1):(7*n)]
-      avantage_qf<-sorties_IR[(7*n+1):(8*n)]
-      imp_plaf_qf<-sorties_IR[(8*n+1):(9*n)]
-      decote<-sorties_IR[(9*n+1):(10*n)]
-      RI_2017<-sorties_IR[(10*n+1):(11*n)]
-      imp_decote_RI<-sorties_IR[(11*n+1):(12*n)]
-      imp_recouvr<-sorties_IR[(12*n+1):(13*n)]
-      imp_ppe_recouvr<-sorties_IR[(13*n+1):(14*n)]
+      rfr<-sorties_IR[1:nn]
+      rfr_par_part<-sorties_IR[(nn+1):(2*nn)]
+      imp_par_part<-sorties_IR[(2*nn+1):(3*nn)]
+      imp_tot<-sorties_IR[(3*nn+1):(4*nn)]
+      rev_imp_part<-sorties_IR[(4*nn+1):(5*nn)]
+      imp_part_sansdemi<-sorties_IR[(5*nn+1):(6*nn)]
+      imp_tot_sansdemi<-sorties_IR[(6*nn+1):(7*nn)]
+      avantage_qf<-sorties_IR[(7*nn+1):(8*nn)]
+      imp_plaf_qf<-sorties_IR[(8*nn+1):(9*nn)]
+      decote<-sorties_IR[(9*nn+1):(10*nn)]
+      RI_2017<-sorties_IR[(10*nn+1):(11*nn)]
+      imp_decote_RI<-sorties_IR[(11*nn+1):(12*nn)]
+      imp_recouvr<-sorties_IR[(12*nn+1):(13*nn)]
+      imp_ppe_recouvr<-sorties_IR[(13*nn+1):(14*nn)]
       
       av_QC<-0
       
@@ -993,7 +993,7 @@ if (year>19) {elig_plaf_th <- 0}
                      montant_af/4))) 
   )
     } else {
-     mont_AF <- rep(montant_af,times=n)
+     mont_AF <- rep(montant_af,times=nn)
     }
 
   
@@ -1040,21 +1040,21 @@ if (year>19) {elig_plaf_th <- 0}
   
   # Taux d'imposition marginal implicite (sur le net)
   # Je m'écarte de la formule des maquettes excel car j'envisage le cas ARE
-  TMI_net <- vector("numeric",n+1)
+  TMI_net <- vector("numeric",nn+1)
   for (i in 1:(length(vecteur))){
     TMI_net[i] <- (1-((rev_disp[i+1]-rev_disp[i])/(rev_act_net[i+1]+ARE_net[i+1]-rev_act_net[i]-ARE_net[i])))
   }
-  TMI_net <- TMI_net [1:n]
+  TMI_net <- TMI_net [1:nn]
   
   # AJOUT : Taux d'effet marginal=1-Taux d'imposition marginal implicite (sur le net)
   EM_net <- 1-TMI_net
   
   # Taux d'imposition marginal implicite (sur le superbrut)
-  TMI_superbrut <- vector("numeric",n+1)
+  TMI_superbrut <- vector("numeric",nn+1)
   for (i in 1:(length(vecteur))){
     TMI_superbrut[i] <- 1-((rev_disp[i+1]-rev_disp[i])/(cout_travail[i+1]-cout_travail[i]))
   }
-  TMI_superbrut <- TMI_superbrut [1:n]
+  TMI_superbrut <- TMI_superbrut [1:nn]
 
   
   #################################
@@ -1065,7 +1065,7 @@ if (year>19) {elig_plaf_th <- 0}
     SI(bareme_var[["seuil_D5"]]<nv_vie*12,1,0)+SI(bareme_var[["seuil_D6"]]<nv_vie*12,1,0)+SI(bareme_var[["seuil_D7"]]<nv_vie*12,1,0)+SI(bareme_var[["seuil_D8"]]<nv_vie*12,1,0)+
     SI(bareme_var[["seuil_D9"]]<nv_vie*12,1,0)
   } else {
-    decile <- vector("numeric",n)
+    decile <- vector("numeric",nn)
   }
   
   #############################################
@@ -1151,10 +1151,10 @@ if (year>19) {elig_plaf_th <- 0}
     
     ASF <- SI((eligible_asf==1)&&(nb_adultes==1),
               bareme_var[["mont_ASF_total"]]*nb_enfants,
-              rep(0,n))
+              rep(0,nn))
   } else {
     
-    ASF <- rep(0,n)
+    ASF <- rep(0,nn)
   }
 
   
