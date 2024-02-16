@@ -1,14 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Camille Dufour, Drees.
+# Nom du dernier auteur : Coraline Best, Drees.
 #
-# Noms des co-auteurs : Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
+# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -125,7 +125,7 @@ ui <-
     
   
     fluidPage(useShinydashboard(),infoBox(title=HTML("<br>"),subtitle="Vous êtes invités à adresser vos retours d'utilisation à l'adresse DREES-REDISTRIBUTION-INES@sante.gouv.fr",icon = icon("users"),color = "red",width=11,fill=TRUE )),
-    navbarPage( title = "EDIFIS - maquette d’Evaluation des DIspositifs FIscaux et Sociaux sur cas-types",
+    navbarPage(title = "EDIFIS - maquette d’Evaluation des DIspositifs FIscaux et Sociaux sur cas-types",
              id="maquette",
              windowTitle="windowtitle",
              footer =  HTML("<footer>
@@ -173,7 +173,7 @@ ui <-
                                    h1("Guide d'usage de la maquette EDIFIS"),
                                    h3("Objectif"),
                                    p(HTML("L'objectif est d'estimer le revenu disponible mensuel d'un ménage-type en fonction du salaire de la personne de référence. 
-                                      La maquette présente au choix les résultats de la législation en vigueur au 01/07 des années 2015 à 2022 sur le champ des prélèvements et des prestations légales. 
+                                      La maquette présente au choix les résultats de la législation en vigueur au 01/07 des années 2015 à 2023 sur le champ des prélèvements et des prestations légales. 
                                       <br/>La maquette met en évidence les effets redistributifs stylisés du système socio-fiscal par type de ménage. 
                                           Attention, elle ne prend pas en compte le poids des types de ménage dans la population totale  donc elle ne permet pas d'en déduire directement les effets redistributifs agrégés 
                                           sur la population totale, ni de simuler des droits individuels.")),
@@ -185,16 +185,16 @@ ui <-
                                      bouton 'Télécharger le tableau'."),
                                    p("Enfin, le dernier onglet 'Sorties graphiques' permet de visualiser le montant de certaines prestations en fonction des revenus nets de la personne de référence. Les graphiques sont exportables en cliquant sur les boutons de téléchargement."),
                                    h3("Socle d'hypothèses"),
-                                   p("Le ménage conserve les mêmes revenus au cours des trois années précédentes (en euros constants). La personne de référence et son éventuel conjoint sont par hypothèse d’âge actif entre 25 et 65 ans. Le cas des enfants de plus de 20 ans est exclu. Lorsqu'ils travaillent, les individus sont salariés en milieu ordinaire."),
+                                   p("Les salaires des ménages évoluent suivant le salaire moyen par tête les deux années précédant l'année d'intérêt. La personne de référence et son éventuel conjoint sont par hypothèse d’âge actif entre 25 et 65 ans. Le cas des enfants de plus de 20 ans est exclu. Lorsqu'ils travaillent, les individus sont salariés en milieu ordinaire."),
                                    p("Par souci de simplification, certains paramètres de la législation ne sont pas pris en compte. Les principales hypothèses simplificatrices sont listées ici :"),
                                    p("- Les cotisations sociales : le barème d'un salarié non cadre en CDI est appliqué."),
                                    p("- L'impôt sur le revenu : l’ensemble des revenus paramétrés dans la maquette sont soumis au barème (pas d’impôt à taux proportionnel, ni de réductions ou crédits d’impôt). A partir de 2019, année de mise en place du prélèvement à la source, l'impôt simulé est celui dû au titre des revenus contemporains."),
-                                   p("- La taxe d'habitation : les montants avant dégrèvement sont des montants fixes moyens par situation conjugale."),
+                                   p("- La taxe d'habitation : elle concerne seulement les résidences principales et les montants avant dégrèvement sont des montants fixes moyens par situation conjugale."),
                                    p("- Les transitions de revenus : du fait de l'absence de transitions, les mécanismes de neutralisations/abattements associés pour les prestations familiales et les aides au logement ne s'appliquent pas."),
                                    p("- Les prestations familiales : celles dédiées à la garde des enfants ne sont pas modélisées (ni le complément de libre choix du mode de garde (Cmg), ni la prestation partagée d’éducation de l’enfant (PreParE))."),
                                    p("- Les aides au logement : les ménages sont locataires du parc privé en zone 2 au loyer plafond et donc éligibles aux aides au logement sous réserve de satisfaire aux conditions de ressources. Les « aides au logement accession » sont exclues de l'analyse."),
-                                   p("- Le recours : le recours est automatique pour toutes les prestations."),
-                                   p("- A partir de 2020 : les revalorisations exceptionnelles d'ARS, de RSA, d'ASS et d'AL en 2020 puis l'indemnité inflation en 2021 et 2022 versées ponctuellement ne sont pas incluses."),
+                                   p("- Le recours : il est automatique pour toutes les prestations."),
+                                   p("- Les aides exceptionnelles : les aides exceptionnelles de solidarité en 2020, l'indemnité inflation en 2021 et 2022 et la prime exceptionnelle de rentrée en 2022 ne sont pas simulées."),
                                    h3("Le code en libre accès"),
                                    a(href = "https://git.drees.fr/drees_code_public/outils/edifis", "Disponible ici."),
                                    HTML("<br><br>")
@@ -207,7 +207,7 @@ ui <-
                  tabPanel(title="Choix des paramètres",value="panel1",icon = icon("gear"),
                           fluidPage(
                             column(4,
-                                   sliderInput("year","Année de législation",min=2015,max=2022,value=2022,step=1,sep=""),
+                                   sliderInput("year","Année de législation",min=2015,max=2023,value=2023,step=1,sep=""),
                                    h3("Echelle de revenus de la personne de référence (PR)"),
                                    p("La maquette calcule le revenu disponible d'un ménage-type, pour des revenus de la personne de référence allant de 
                                      0 à une valeur maximale suivant un pas à paramétrer."),
@@ -544,7 +544,30 @@ ui <-
                                                          multiple = TRUE),
                                              pickerInput("revdisp22","Revenus disponibles",rev_disp22,
                                                          selected=c("Total des prestations","Total des impôts","Revenu disponible"),
-                                                         multiple = TRUE)
+                                                         multiple = TRUE),
+                            ),
+                            conditionalPanel(condition="input.year==2023 & input.n2000==0",
+                                             pickerInput("rev230","Revenus primaires",rev23,
+                                                         selected=c("Salaire brut en % du Smic brut temps plein (PR)","Salaire net (PR)", "Total des revenus primaires du ménage",`selected-text-format` = "count > 3"),
+                                                         multiple = TRUE)),
+                            conditionalPanel(condition="input.year==2023 & input.n2000==1",
+                                             pickerInput("rev231","Revenus primaires",rev23,
+                                                          selected=c("ARE nette (PR)","Total des revenus primaires du ménage",`selected-text-format` = "count > 3"),
+                                                          multiple = TRUE)),
+                            conditionalPanel(condition="input.year==2023",
+                                             pickerInput("prevsoc23","Prélèvements sociaux",prelevements_soc23,
+                                                          multiple = TRUE),
+                                             pickerInput("impotax23","Impôts",impot_tax23,
+                                                          multiple = TRUE),
+                                             pickerInput("minsoc23","Minima sociaux et prime d'activité",min_soc23,
+                                                          multiple = TRUE),
+                                             pickerInput("pf23",HTML("Prestations familiales <br/> (hors aides à la garde)"),pf_23,
+                                                          multiple = TRUE),
+                                             pickerInput("alloclog23",HTML("Allocations logement <br/> des locataires"),alloc_log23,
+                                                          multiple = TRUE),
+                                             pickerInput("revdisp23","Revenus disponibles",rev_disp23,
+                                                          selected=c("Total des prestations","Total des impôts","Revenu disponible"),
+                                                          multiple = TRUE)
                             ),
                             
                             
@@ -670,6 +693,18 @@ ui <-
                                                             pickerInput("show_area221",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
                                                                         choices=measure_vars1[["22"]],
                                                                         selected=measure_vars1[["22"]],
+                                                                        multiple = TRUE)
+                                           ),
+                                           conditionalPanel(condition="input.year==2023 & input.n2000==0",
+                                                            pickerInput("show_area230",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
+                                                                        choices=measure_vars0[["23"]],
+                                                                        selected=measure_vars0[["23"]],
+                                                                        multiple = TRUE)                 
+                                           ),
+                                           conditionalPanel(condition="input.year==2023 & input.n2000==1",
+                                                            pickerInput("show_area231",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
+                                                                        choices=measure_vars1[["23"]],
+                                                                        selected=measure_vars1[["23"]],
                                                                         multiple = TRUE)),
         
                                width = 3),
@@ -689,6 +724,7 @@ ui <-
                           fluidRow(
                               HTML("<br>"),
                               withSpinner(plotOutput("graph3", height = "500px")),
+                              #withSpinner(girafeOutput("graph3", height = "500px")),
                               downloadButton(outputId = "graph_emp.png", label = "Télécharger le graphique empilé"),
                               HTML("<br><br><br>"),
                               withSpinner(plotlyOutput("graph2", width = "83%", height = "400px")),
@@ -703,5 +739,3 @@ ui <-
    
    ) # fin de la fonction Ui
    
-
-

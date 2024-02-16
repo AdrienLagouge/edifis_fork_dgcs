@@ -1,14 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Camille Dufour, Drees.
+# Nom du dernier auteur : Coraline Best, Drees.
 #
-# Noms des co-auteurs : Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
+# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -72,7 +72,7 @@ castype <- function(vecteur,bareme_var,year){
 ##bareme_var sont les paramètres législatifs
 ##year est l'année de législation sélectionnée
 
-print(bareme_var[["seuil_D1"]])
+print(bareme_var[["seuil_D9"]])
   
   #le vecteur est rempli selon le pas choisi par l'utilisateur
   for (i in 2:length(vecteur)){
@@ -275,7 +275,6 @@ print(bareme_var[["seuil_D1"]])
   
   # Toutes les cases presentes dans la maquette ne le sont pas dans cette section, 
   # elles ont ete remontees afin de pouvoir executer certaines cellules
-  if (year>14){
     
     if (year<22){
       
@@ -304,12 +303,6 @@ print(bareme_var[["seuil_D1"]])
       
     }
     
-    
-  } else {
-    br_conj_AAH <- vector("numeric",nn)
-    mont_conj_AAH <- vector("numeric",nn)
-    max_aah_ass_conj <- vector("numeric",nn)
-  }
 
   ######################################
   #### ASS du conjoint Prime de Noel ###
@@ -492,7 +485,7 @@ print(bareme_var[["seuil_D1"]])
     
     # Montant
     
-    mont_AB_paje <- SI(revimp_n_2_abatt<plaf_AB_plein,bareme_var[["montant_paje_plein"]]*nb_enft_3,SI(revimp_n_2_abatt<plaf_AB_partiel,bareme_var[["montant_paje_partiel"]]*nb_enft_3,0))
+    mont_AB_paje <- SI(revimp_n_2_abatt<plaf_AB_plein,bareme_var[["montant_paje_plein"]]*(nb_enft_3>0),SI(revimp_n_2_abatt<plaf_AB_partiel,bareme_var[["montant_paje_partiel"]]*(nb_enft_3>0),0))
     
     
   } else { if (year==14){
@@ -507,7 +500,7 @@ print(bareme_var[["seuil_D1"]])
                bareme_var[["plaf_simple_paje_plein"]] + pmin(nb_enfants,2)*bareme_var[["plafond_sup_enf_12_paje_plein"]] + pmax(nb_enfants-3,0)*bareme_var[["plafond_sup_enf_3_paje_plein"]]
     )
     
-    mont_AB_paje <- SI((rev_act_dec+sal_declar_conj+autres_rev)*0.9/(1+bareme_var[["deflat_2"]])<plaf_AB_plein,bareme_var[["montant_paje_plein"]]*nb_enft_3,SI((rev_act_dec+sal_declar_conj+autres_rev)*0.9/(1+bareme_var[["deflat_2"]])<plaf_AB_partiel,bareme_var[["montant_paje_partiel"]]*nb_enft_3,0))
+    mont_AB_paje <- SI((rev_act_dec+sal_declar_conj+autres_rev)*0.9/(1+bareme_var[["deflat_2"]])<plaf_AB_plein,bareme_var[["montant_paje_plein"]]*(nb_enft_3>0),SI((rev_act_dec+sal_declar_conj+autres_rev)*0.9/(1+bareme_var[["deflat_2"]])<plaf_AB_partiel,bareme_var[["montant_paje_partiel"]]*(nb_enft_3>0),0))
     
   } else {
     # avant 2014, la distinction entre paje taux partiel/taux plein n'est pas faite
@@ -520,7 +513,7 @@ print(bareme_var[["seuil_D1"]])
     plaf_AB_plein <- vector("numeric",nn)
     
     mont_AB_paje <- SI((rev_act_dec*0.9/(1+bareme_var[["deflat_2"]]))<plaf_AB_partiel,
-              bareme_var[["montant_paje_plein"]]*nb_enft_3,
+              bareme_var[["montant_paje_plein"]]*(nb_enft_3>0),
               0)
     }
  
@@ -533,11 +526,8 @@ print(bareme_var[["seuil_D1"]])
   #### Allocation adulte handicape #####
   ######################################
   
-  # NB : AAH pas presente dans la maquette avant 2014
-  if (year>14){
     
     if (year<22){
-      
       # Base ressources
       br_AAH <- ((sal_declar_conj+ are_nette_conjoint)*bareme_var[["AAH_abatt_general"]] + autres_rev  + ARE_net +  SI(mont_conj_AAH==max_aah_ass_conj,0,mont_ASS))*bareme_var[["abatt_rfr"]]+
         pmin(rev_act_dec,bareme_var[["AAH_plafond_abatt_salaire"]])*bareme_var[["AAH_abatt_salaire_t1"]] +
@@ -581,16 +571,6 @@ print(bareme_var[["seuil_D1"]])
       max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH)
     }
     
-    
-  } else {
-    
-    br_AAH <- vector("numeric",nn)
-    mont_AAH <- vector("numeric",nn)
-    mva <- vector("numeric",nn)
-    mva_conj <- vector("numeric",nn)
-    AAH_tot <- vector("numeric",nn)
-    max_aah_ass_conj <- vector("numeric",nn)
-  }
   
   
   
@@ -949,7 +929,7 @@ if (year>19) {elig_plaf_th <- 0}
       plaf_mont_th <-pmax(0,revimp_n_2_abatt-abat_rfr)*bareme_var[["tx_degrevement_th"]]
       mont_TH_predegr<-(elig_plaf_th*pmin(plaf_mont_th,montant_TH) + (1-elig_plaf_th)*montant_TH)*(1-((imp_recouvr==0)*(handicap_personne>0 | handicap_conjoint>0)))
       }
-    if (year>17){
+    if (year>17 & year<23){
       # Montant de TH
       mont_TH <-mont_TH_predegr*
         ( (rev_impo_n_1<seuil_rfr_degr_tot)*(1-bareme_var[["degr_th_max"]])+
@@ -963,9 +943,7 @@ if (year>19) {elig_plaf_th <- 0}
             SI ((rev_impo_n_1>=seuil_rfr_degr_tot) & (rev_impo_n_1<seuil_rfr_degr_deg),(1-(seuil_rfr_degr_deg-rev_impo_n_1)/(seuil_rfr_degr_deg-seuil_rfr_degr_tot))*(1-bareme_var[["degr_th_partiel"]]),0)+
              (rev_impo_n_1>=pmax(seuil_rfr_degr_tot,seuil_rfr_degr_deg))*(1-bareme_var[["degr_th_partiel"]])
           )
-          
       }
-     
    } else {
       # Montant de TH
       mont_TH <- mont_TH_predegr
@@ -1127,6 +1105,14 @@ if (year>19) {elig_plaf_th <- 0}
       (uc_energie>=2)*(bareme_var[["ener_1tranch_3UC"]]))+
       SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_1tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_2tranch"]]),(uc_energie==1)*bareme_var[["ener_2tranch_1UC"]]+SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_2tranch_2UC"]],0)+(uc_energie>=2)*bareme_var[["ener_2tranch_3UC"]],0)+
       SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_2tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_3tranch"]]),(uc_energie==1)*bareme_var[["ener_3tranch_1UC"]]+SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_3tranch_2UC"]],0)+(uc_energie>=2)*bareme_var[["ener_3tranch_3UC"]],0))/12
+  }else { if (year==22){
+    energie <- ((rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_1tranch"]])*((uc_energie==1)*(bareme_var[["ener_1tranch_1UC"]])+
+                                                                                  SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_1tranch_2UC"]],0)+
+                                                                                  (uc_energie>=2)*(bareme_var[["ener_1tranch_3UC"]]))+
+                  SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_1tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_2tranch"]]),(uc_energie==1)*bareme_var[["ener_2tranch_1UC"]]+SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_2tranch_2UC"]],0)+(uc_energie>=2)*bareme_var[["ener_2tranch_3UC"]],0)+
+                  SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_2tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_3tranch"]]),(uc_energie==1)*bareme_var[["ener_3tranch_1UC"]]+SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_3tranch_2UC"]],0)+(uc_energie>=2)*bareme_var[["ener_3tranch_3UC"]],0)+
+                  SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_3tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_4tranch"]]),(uc_energie==1)*bareme_var[["ener_4tranch_1UC"]]+SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_4tranch_2UC"]],0)+(uc_energie>=2)*bareme_var[["ener_4tranch_3UC"]],0)+
+                  SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_4tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_5tranch"]]),bareme_var[["ener_bonus2022"]],0))/12
   } else {
     energie <- ((rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_1tranch"]])*((uc_energie==1)*(bareme_var[["ener_1tranch_1UC"]])+
          SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_1tranch_2UC"]],0)+
@@ -1136,6 +1122,7 @@ if (year>19) {elig_plaf_th <- 0}
       SI((rev_impo_n_1/uc_energie>=bareme_var[["plafond_ener_3tranch"]]) & (rev_impo_n_1/uc_energie<bareme_var[["plafond_ener_4tranch"]]),(uc_energie==1)*bareme_var[["ener_4tranch_1UC"]]+SI((uc_energie>1) & (uc_energie<2),bareme_var[["ener_4tranch_2UC"]],0)+(uc_energie>=2)*bareme_var[["ener_4tranch_3UC"]],0))/12
   }
   } 
+  }
   
   ##############################################################################
   #### Revenu ajuste (revenu dispo + electricite/cheque energie) ####
@@ -1192,7 +1179,31 @@ if (year>19) {elig_plaf_th <- 0}
   ##### Attention /!\ L'ordre dans les dataframes suivants doit être le même dans les colnames #####
   ############################################ de global.R #########################################
   ##################################################################################################
-
+  
+  if (year==23){
+    df <- data.frame(vecteur,tps_travail,percen_smic_tps_plein,ARE_net,sal_ref_net,
+                     cotis_emp,fillon_exo,cotis_sal,csg_ded,csg_non_ded,
+                     total_ps,
+                     cout_travail,
+                     rev_act_net,tps_trav_net,perc_smic_net_tpsplein,rev_act_dec,
+                     sal_net_conj,are_nette_conjoint,autres_rev,rev_primaire,
+                     br_ASS,rev_impo_n_1,rev_impo_n_2,revimp_n_2_abatt,
+                     mont_ASS,ASS_conj,BR_AL,AL,mont_AF,plaf_CF,plaf_CF_majo,mont_CF,ASF,plaf_AB_partiel,plaf_AB_plein,
+                     mont_AB_paje,br_AAH,mont_AAH,mva,br_conj_AAH,mont_conj_AAH,mva_conj,AAH_tot,max_aah_ass_conj,
+                     fl_RSA,br_rsa,mont_RSA,prime_noel,max_noel_ass_conj,fl_PA,br_pa,bonus_pa,bonus_servi,mont_PA,
+                     total_minima_soc,total_minima_soc_cheque_energie,
+                     ars,total_pf,
+                     rfr,rfr_par_part,imp_par_part,imp_tot,rev_imp_part,imp_part_sansdemi,imp_tot_sansdemi,avantage_qf,imp_plaf_qf,decote,
+                     imp_decote_RI,imp_recouvr,av_QC,mont_TH_predegr,mont_TH,rev_trav_net,rev_hors_trav,
+                     presta,prelev,rev_disp,nv_vie,TMI_net,EM_net,TMI_superbrut,decile,CMUc,ACS,energie,
+                     rev_ajust,check.names=F)
+    
+    colnames(df) <- colnames23
+    for (i in 1:ncol(df)){
+      label(df[,i]) <- labels23[i]
+    }
+  } else {  
+    
   if (year==22){
     df <- data.frame(vecteur,tps_travail,percen_smic_tps_plein,ARE_net,sal_ref_net,
                      cotis_emp,fillon_exo,cotis_sal,csg_ded,csg_non_ded,
@@ -1216,8 +1227,7 @@ if (year>19) {elig_plaf_th <- 0}
       label(df[,i]) <- labels22[i]
     }
   } else {  
-
-    if (year==21){
+  if (year==21){
     df <- data.frame(vecteur,tps_travail,percen_smic_tps_plein,ARE_net,sal_ref_net,
                      cotis_emp,fillon_exo,cotis_sal,csg_ded,csg_non_ded,
                      total_ps,
@@ -1434,6 +1444,7 @@ if (year>19) {elig_plaf_th <- 0}
   }
   }
   } 
+  }
   }# fin du else
   
   return(df)
@@ -1586,81 +1597,115 @@ castype2 <- function(data,leg,bareme_var,year,n2000){
 # 2 versions du code selon que le type de revenus sélectionné soit salaire ou ARE
 #==================================================================================================================
 
-  castype3 <- function(data,leg,bareme_var,year,mv,n2000){
-    ##data est la table des données représentées 
-    ##leg est la légende qui suit le graphique 
-    ##bareme_var sont les paramètres législatifs
-    ##year est l'année de législation sélectionnée
-    ##mv est la liste des prestations et revenus primaires sélectionnés pour la représentation en graphique empilé
-    ##n2000 est le type de revenu sélectionné
-    if (n2000==0) {
-      print(paste("melt castype4",system.time(data2 <- melt(data,id.vars=c("rev_act_net","rev_disp","are_nette_conjoint","sal_net_conj","autres_rev"),
-                                                            measure.vars=mv))))
-
-      # realisation du graphique en aires empilees
-      getPalette = colorRampPalette(brewer.pal(9, "Spectral"))
-      
-      max_revenu_net=max(data2$rev_act_net,na.rm=T)
-      max_revtot_net=max(data2$rev_act_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
-      min_revtot_net=min(data2$rev_act_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
-      
-      p3 <- ggplot(data2, aes(x = rev_act_net,  y=value))+
-        geom_area(position='stack', aes(fill=variable))+
-        scale_fill_manual(values=getPalette(15)
-                          ,labels=labels(libelles[libelles %in% mv])
-        )+
-        labs(title="Composition du revenu disponible \n en fonction du salaire net",x="Salaire net (en euros)", y="Ressources finales (en euros)",fill="Prestations et \nrevenus primaires",caption=leg)+
-        geom_line(data=data2,aes(rev_act_net, rev_disp, color='Revenu disponible'),size=1)+
-        geom_line(data=data.frame(x=c(0,max_revenu_net),y=c(min_revtot_net,max_revtot_net)),aes(x=x, y=y,color="Revenus primaires"), 
-                  size=1,linetype="dashed")+
-        geom_vline(xintercept=c(bareme_var[["smic_n"]]), linetype="dotted")+ 
-        scale_colour_manual("", 
-                            breaks = c("Revenu disponible", "Revenus primaires"),
-                            values = c("Revenu disponible"="blue", "Revenus primaires"="red")) + 
-        theme(panel.background = element_rect(fill = "white",colour = "white",size = 0.5, linetype = "solid"),
-              panel.grid.major = element_line(size = 0.25, linetype = 'solid',colour = "grey"), 
-              panel.border = element_blank(),
-              panel.grid.minor = element_line(size = 0.25, linetype = 'solid',colour = "grey"),
-              plot.title = element_text(face="bold", size=12,hjust=0.5),
-              plot.caption = element_text(size=10))+
-        geom_text(mapping = aes(x = bareme_var[["smic_n"]],
-                                y =0, vjust=1.2,
-                                label = "SMIC"))
-      
-    }
-    if (n2000==1) {
-      print(paste("melt castype4",system.time(data2 <- melt(data,id.vars=c("ARE_net","rev_disp","are_nette_conjoint","sal_net_conj","autres_rev"),
-                                                            measure.vars=mv))))
-      
-      # Realisation du graphique en aires empilees
-      getPalette = colorRampPalette(brewer.pal(9, "Spectral"))
-      
-      max_revenu_net=max(data2$ARE_net,na.rm=T)
-      max_revtot_net=max(data2$ARE_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
-      min_revtot_net=min(data2$ARE_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
-      
-      p3 <- ggplot(data2, aes(x = ARE_net,  y=value))+
-        geom_area(position='stack', aes(fill=variable))+
-        scale_fill_manual(values=getPalette(15)
-                          ,labels=labels(libelles[libelles %in% mv])
-        )+
-        labs(title="Composition du revenu disponible \n en fonction de l'ARE nette",x="ARE nette (en euros)", y="Ressources finales (en euros)",fill="Prestations et \nrevenus primaires",caption=leg)+
-        geom_line(data=data2,aes(ARE_net, rev_disp, color='Revenu disponible'),size=1)+
-        geom_line(data=data.frame(x=c(0,max_revenu_net),y=c(min_revtot_net,max_revtot_net)),aes(x=x, y=y,color="Revenus primaires"), 
-                  size=1,linetype="dashed")+geom_vline(xintercept=c(bareme_var[["smic_n"]]), linetype="dotted")+ 
-        scale_colour_manual("", 
-                            breaks = c("Revenu disponible", "Revenus primaires"),
-                            values = c("Revenu disponible"="blue", "Revenus primaires"="red")) + 
-        theme(panel.background = element_rect(fill = "white",colour = "white",size = 0.5, linetype = "solid"),
-              panel.grid.major = element_line(size = 0.25, linetype = 'solid',colour = "grey"), 
-              panel.border = element_blank(),
-              panel.grid.minor = element_line(size = 0.25, linetype = 'solid',colour = "grey"),
-              plot.title = element_text(face="bold", size=12,hjust=0.5),
-              plot.caption = element_text(size=10))+
-        geom_text(mapping = aes(x = bareme_var[["smic_n"]],
-                                y =0, vjust=1.2,
-                                label = "SMIC"))
-    }
-    print(p3)
+castype3 <- function(data,leg,bareme_var,year,mv,n2000){
+  ##data est la table des données représentées 
+  ##leg est la légende qui suit le graphique 
+  ##bareme_var sont les paramètres législatifs
+  ##year est l'année de législation sélectionnée
+  ##mv est la liste des prestations et revenus primaires sélectionnés pour la représentation en graphique empilé
+  ##n2000 est le type de revenu sélectionné
+  if (n2000==0) {
+    print(paste("melt castype4",system.time({
+      tmp <- data %>%
+        select(
+          c("rev_act_net","rev_disp","are_nette_conjoint","sal_net_conj","autres_rev"),
+          all_of(mv)) %>%
+        mutate(across(all_of(mv), as.numeric)) %>% mutate(rev_act_net_=rev_act_net,
+                                                         sal_net_conj_=sal_net_conj,
+                                                         are_nette_conjoint_=are_nette_conjoint,
+                                                         autres_rev_=autres_rev)
+      data2<- tidyr::pivot_longer(
+        tmp,
+        cols = all_of(mv),
+        names_to = "variable") %>% rename(rev_act_net=rev_act_net_,
+                                          sal_net_conj=sal_net_conj_,
+                                          are_nette_conjoint=are_nette_conjoint_,
+                                          autres_rev=autres_rev_) %>% mutate(variable=factor(variable,levels=mv))
+      }
+     )))
+    
+    # realisation du graphique en aires empilees
+    getPalette = colorRampPalette(brewer.pal(9, "Spectral"))
+    
+    max_revenu_net=max(data2$rev_act_net,na.rm=T)
+    max_revtot_net=max(data2$rev_act_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
+    min_revtot_net=min(data2$rev_act_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
+    
+    p3 <- ggplot(data2, aes(x = rev_act_net,  y=value))+
+      geom_area(position='stack', aes(fill=variable))+
+      scale_fill_manual(values=getPalette(15)
+                        ,labels=labels(libelles[libelles %in% mv])
+      )+
+      labs(title="Composition du revenu disponible \n en fonction du salaire net",x="Salaire net (en euros)", y="Ressources finales (en euros)",fill="Prestations et \nrevenus primaires",caption=leg)+
+      geom_line(data=data2,aes(rev_act_net, rev_disp, color='Revenu disponible'),linewidth=1)+
+      geom_line(data=data.frame(x=c(0,max_revenu_net),y=c(min_revtot_net,max_revtot_net)),aes(x=x, y=y,color="Revenus primaires"), 
+                linewidth=1,linetype="dashed")+
+      geom_vline(xintercept=c(bareme_var[["smic_n"]]), linetype="dotted")+ 
+      scale_colour_manual("", 
+                          breaks = c("Revenu disponible", "Revenus primaires"),
+                          values = c("Revenu disponible"="blue", "Revenus primaires"="red")) + 
+      theme(panel.background = element_rect(fill = "white",colour = "white",linewidth = 0.5, linetype = "solid"),
+            panel.grid.major = element_line(linewidth = 0.25, linetype = 'solid',colour = "grey"), 
+            panel.border = element_blank(),
+            panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid',colour = "grey"),
+            plot.title = element_text(face="bold", size=12,hjust=0.5),
+            plot.caption = element_text(size=10))+
+      geom_text(mapping = aes(x = bareme_var[["smic_n"]],
+                              y =0, vjust=1.2,
+                              label = "SMIC"))
+    #p3<-girafe(p3, height = 5, width = 6)
+    
   }
-  
+  if (n2000==1) {
+    print(paste("melt castype4",system.time({
+      tmp <- data %>%
+        select(
+          c("ARE_net","rev_disp","are_nette_conjoint","sal_net_conj","autres_rev"),
+          all_of(mv)) %>%
+        mutate(across(all_of(mv), as.numeric)) %>% mutate(ARE_net_=ARE_net,
+                                                          sal_net_conj_=sal_net_conj,
+                                                          are_nette_conjoint_=are_nette_conjoint,
+                                                          autres_rev_=autres_rev)
+      data2<- tidyr::pivot_longer(
+        tmp,
+        cols = all_of(mv),
+        names_to = "variable") %>% rename(ARE_net=ARE_net_,
+                                          sal_net_conj=sal_net_conj_,
+                                          are_nette_conjoint=are_nette_conjoint_,
+                                          autres_rev=autres_rev_) %>% mutate(variable=factor(variable,levels=mv))
+      }
+      )))
+    
+    
+    # Realisation du graphique en aires empilees
+    getPalette = colorRampPalette(brewer.pal(9, "Spectral"))
+    
+    max_revenu_net=max(data2$ARE_net,na.rm=T)
+    max_revtot_net=max(data2$ARE_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
+    min_revtot_net=min(data2$ARE_net+data2$are_nette_conjoint+data2$sal_net_conj+data2$autres_rev,na.rm=T)
+    
+    p3 <- ggplot(data2, aes(x = ARE_net,  y=value))+
+      geom_area(position='stack', aes(fill=variable))+
+      scale_fill_manual(values=getPalette(15)
+                        ,labels=labels(libelles[libelles %in% mv])
+      )+
+      labs(title="Composition du revenu disponible \n en fonction de l'ARE nette",x="ARE nette (en euros)", y="Ressources finales (en euros)",fill="Prestations et \nrevenus primaires",caption=leg)+
+      geom_line(data=data2,aes(ARE_net, rev_disp, color='Revenu disponible'),linewidth=1)+
+      geom_line(data=data.frame(x=c(0,max_revenu_net),y=c(min_revtot_net,max_revtot_net)),aes(x=x, y=y,color="Revenus primaires"), 
+                linewidth=1,linetype="dashed")+geom_vline(xintercept=c(bareme_var[["smic_n"]]), linetype="dotted")+ 
+      scale_colour_manual("", 
+                          breaks = c("Revenu disponible", "Revenus primaires"),
+                          values = c("Revenu disponible"="blue", "Revenus primaires"="red")) + 
+      theme(panel.background = element_rect(fill = "white",colour = "white",linewidth = 0.5, linetype = "solid"),
+            panel.grid.major = element_line(linewidth = 0.25, linetype = 'solid',colour = "grey"), 
+            panel.border = element_blank(),
+            panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid',colour = "grey"),
+            plot.title = element_text(face="bold", size=12,hjust=0.5),
+            plot.caption = element_text(size=10))+
+      geom_text(mapping = aes(x = bareme_var[["smic_n"]],
+                              y =0, vjust=1.2,
+                              label = "SMIC"))
+  }
+  print(p3)
+}
+

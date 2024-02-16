@@ -1,14 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Camille Dufour, Drees.
+# Nom du dernier auteur : Coraline Best, Drees.
 #
-# Noms des co-auteurs : Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
+# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -78,6 +78,8 @@ library(shinydashboard)
 library(plotly)
 library(tidyverse)
 library(magrittr)
+library(ggiraph)
+library(bslib)
 
 # fonction SI() utilisée dans les pgms base.R et cas-type.R (à terme n'utiliser que IFELSE())
 SI <- function(condition,valeur_si_vrai,valeur_si_faux){
@@ -99,6 +101,89 @@ source("R/cas-type.R")
 ######################### 3e onglet ########################## 
 
 ###Définition des libellés de colonnes dans les tables de données (en correspondance avec les noms de variables définis dans le pgm cas-type.R)
+#======================================================================================#
+#========================================= 2023 =======================================#
+#======================================================================================#
+
+
+colnames23 <- c("vecteur","tps_travail","percen_smic_tps_plein","ARE_net","sal_ref_net",
+                "cotis_emp","fillon_exo","cotis_sal","csg_ded","csg_non_ded","total_ps",
+                "cout_travail","rev_act_net","tps_trav_net","perc_smic_net_tpsplein","rev_act_dec",
+                "sal_net_conj","are_nette_conjoint","autres_rev","rev_primaire",
+                "br_ASS","rev_impo_n_1","rev_impo_n_2","revimp_n_2_abatt",
+                "mont_ASS","ASS_conj","BR_AL","AL","mont_AF","plaf_CF","plaf_CF_majo","mont_CF","ASF","plaf_AB_partiel","plaf_AB_plein",
+                "mont_AB_paje","br_AAH","mont_AAH","mva","br_conj_AAH","mont_conj_AAH","mva_conj","AAH_tot","max_aah_ass_conj",
+                "fl_RSA","br_rsa","mont_RSA","prime_noel","max_noel_ass_conj","fl_PA","br_pa","bonus_pa","bonus_servi","mont_PA",
+                "total_minima_soc","total_minima_soc_cheque_energie","ars","total_pf",
+                "rfr","rfr_par_part","imp_par_part","imp_tot","rev_imp_part","imp_part_sansdemi","imp_tot_sansdemi","avantage_qf","imp_plaf_qf","decote",
+                "imp_decote_RI","imp_recouvr","av_QC","mont_TH_predegr","mont_TH","rev_trav_net","rev_hors_trav",
+                "presta","prelev","rev_disp","nv_vie","TMI_net","EM_net","TMI_superbrut","decile","CMUc","ACS","energie",
+                "rev_ajust")
+
+labels23 <- c("Salaire brut (PR)","Temps de travail en % du temps plein Smic brut (PR)",
+              "Salaire brut en % du Smic brut temps plein (PR)","ARE nette (PR)","Salaire de référence net pour l'ARE (N-1 et N-2) (PR)",
+              "Cotisations sociales employeurs avant all. généraux (PR)","Allègements généraux de cotisations (PR)","Cotisations sociales salariés (PR)",
+              "CSG déductible sur les salaires (PR)","CSG non déductible / CRDS (PR)",
+              "Total des prélèvements sociaux",
+              "Salaire superbrut (PR)","Salaire net (PR)","Temps de travail en % du temps plein Smic net (PR)",
+              "Salaire net en % du Smic net temps plein (PR)","Salaire déclaré (PR)",
+              "Salaire net du conjoint","ARE nette du conjoint","Autres revenus imposables du ménage",
+              "Total des revenus primaires du ménage",
+              "Base ressources du ménage pour l'ASS (revenu imposable N-1 avant abattements)","Revenu imposable du ménage (N-1)","Revenu imposable du ménage (N-2)",
+              "Revenu imposable du ménage (N-2) avec abatt. 30% rev. act. N-2 pour les bénéficiaires ARE",
+              "ASS - Montant (conjoint)","ASS - Prime de Noël (conjoint)","AL - Base ressources","AL - Montant", "Allocations familiales - Montant","Plafond CF non majoré",
+              "Plafond CF majoré","Complément familial - Montant","Allocation soutien familial - Montant","Plafond AB taux partiel","Plafond AB taux plein",
+              "AB (Paje) - Montant","AAH - Base ressources (PR)","AAH - Montant (PR)",
+              "AAH - Maj. vie autonome (PR)","AAH - Base ressources (conjoint)","AAH - Montant (conjoint)",
+              "AAH - Maj. vie autonome (conjoint)","AAH - Montant",
+              "Max (AAH,ASS) du conjoint","RSA - Forfait logement","RSA - Base ressources",
+              "RSA - Montant", "RSA Prime de Noël - Montant","Prime de Noël (max (RSA,ASS du conjoint))","PA - Forfait logement",
+              "PA - Base ressources","PA - Bonus d'activité théorique","PA - Bonus d'activité servi","PA - Montant","Total des minima sociaux et PA","Total des minima sociaux et PA, y compris le chèque énergie",
+              "Allocation de rentrée scolaire - Montant","Total des prestations familiales",
+              "Revenu imposable (RFR)","Revenu imposable par part fiscale",
+              "Impôt par part fiscale","Impôt total","Revenu imposable par part fiscale (sans demi-part supplémentaire)",
+              "Impôt par part fiscale (sans demi-part supplémentaire)","Impôt total (sans demi-part supplémentaire)",
+              "Avantage lié au QF","Impôt après plafonnement QF",
+              "Décote","Impôt après décote",
+              "Impôt sur le revenu - Montant","Avantage lié au QC","Montant de TH avant dégrèvement","TH - Montant",
+              "Total des salaires nets","Total des revenus hors salaires","Total des prestations","Total des impôts","Revenu disponible",
+              "Niveau de vie","Taux d'imposition marginal implicite (TIMI) sur le revenu net","Effet marginal sur le revenu disponible (1-TIMI)",
+              "Taux d'imposition marginal implicite (sur le superbrut)","Décile de niv. de vie",
+              "Droit à la CSS gratuite","Droit à la CSS payante","Chèque énergie - Montant","Revenu disponible y compris le chèque énergie")
+
+rev23 <- c("Salaire brut (PR)","Temps de travail en % du temps plein Smic brut (PR)",
+           "Salaire brut en % du Smic brut temps plein (PR)","ARE nette (PR)","Salaire de référence net pour l'ARE (N-1 et N-2) (PR)",
+           "Salaire superbrut (PR)","Salaire net (PR)","Temps de travail en % du temps plein Smic net (PR)",
+           "Salaire net en % du Smic net temps plein (PR)","Salaire déclaré (PR)",
+           "Salaire net du conjoint","ARE nette du conjoint","Autres revenus imposables du ménage",
+           "Total des revenus primaires du ménage",
+           "Base ressources du ménage pour l'ASS (revenu imposable N-1 avant abattements)","Revenu imposable du ménage (N-1)","Revenu imposable du ménage (N-2)",
+           "Revenu imposable du ménage (N-2) avec abatt. 30% rev. act. N-2 pour les bénéficiaires ARE")
+
+prelevements_soc23 <- c("Cotisations sociales employeurs avant all. généraux (PR)","Allègements généraux de cotisations (PR)","Cotisations sociales salariés (PR)",
+                        "CSG déductible sur les salaires (PR)","CSG non déductible / CRDS (PR)","Total des prélèvements sociaux")
+
+impot_tax23 <- c("Revenu imposable (RFR)","Revenu imposable par part fiscale","Impôt par part fiscale","Impôt total",
+                 "Revenu imposable par part fiscale (sans demi-part supplémentaire)","Impôt par part fiscale (sans demi-part supplémentaire)",
+                 "Impôt total (sans demi-part supplémentaire)","Avantage lié au QF","Impôt après plafonnement QF","Décote",
+                 "Impôt après décote","Impôt sur le revenu - Montant","Avantage lié au QC","Total des impôts")
+
+min_soc23 <- c("ASS - Montant (conjoint)","ASS - Prime de Noël (conjoint)","AAH - Base ressources (PR)","AAH - Montant (PR)","AAH - Maj. vie autonome (PR)",
+               "AAH - Base ressources (conjoint)","AAH - Montant (conjoint)","AAH - Maj. vie autonome (conjoint)","AAH - Montant",
+               "Max (AAH,ASS) du conjoint","RSA - Forfait logement","RSA - Base ressources","RSA - Montant", "RSA Prime de Noël - Montant",
+               "Prime de Noël (max (RSA,ASS du conjoint))","PA - Forfait logement","PA - Base ressources","PA - Bonus d'activité théorique","PA - Bonus d'activité servi","PA - Montant","Droit à la CSS gratuite","Droit à la CSS payante",
+               "Chèque énergie - Montant",
+               "Total des minima sociaux et PA","Total des minima sociaux et PA, y compris le chèque énergie")
+
+pf_23 <- c("Allocations familiales - Montant","Plafond CF non majoré","Plafond CF majoré","Complément familial - Montant","Allocation soutien familial - Montant","Plafond AB taux partiel","Plafond AB taux plein","AB (Paje) - Montant", 
+           "Allocation de rentrée scolaire - Montant","Total des prestations familiales")
+
+alloc_log23 <- c("AL - Base ressources","AL - Montant")
+
+rev_disp23 <- c("Total des salaires nets","Total des revenus hors salaires","Total des prestations","Total des impôts","Revenu disponible","Niveau de vie",
+                "Taux d'imposition marginal implicite (TIMI) sur le revenu net","Effet marginal sur le revenu disponible (1-TIMI)",
+                "Décile de niv. de vie","Revenu disponible y compris le chèque énergie")
+
 
 #======================================================================================#
 #========================================= 2022 =======================================#
@@ -1001,7 +1086,21 @@ libelles <- c("Allocations logement"="AL",
 ###Définition des menus déroulants permettant le choix des transferts représentés dans le graphique empilé
 
 ###Cas où le type de revenu de la personne de référence est du salaire (n2000==0)
-measure_vars0 <- list("22"=c("Allocations logement"="AL",
+measure_vars0 <- list("23"=c("Allocations logement"="AL",
+                             "Prime d'activité"="mont_PA",
+                             "RSA"="mont_RSA",
+                             "Allocation de solidarité spécifique du conjoint"="mont_ASS",
+                             "Allocation adulte handicapé"="AAH_tot",
+                             "Complément familial"="mont_CF",
+                             "Allocation de base (PAJE)"="mont_AB_paje",
+                             "Allocation de rentrée scolaire"="ars",
+                             "Allocations familiales"="mont_AF",
+                             "Allocation de soutien familial"="ASF",
+                             "Salaire net"="rev_act_net",
+                             "Salaire net du conjoint"="sal_net_conj",
+                             "ARE nette du conjoint"="are_nette_conjoint",
+                             "Autres revenus"="autres_rev"),
+                      "22"=c("Allocations logement"="AL",
                              "Prime d'activité"="mont_PA",
                              "RSA"="mont_RSA",
                              "Allocation de solidarité spécifique du conjoint"="mont_ASS",
@@ -1141,7 +1240,21 @@ measure_vars0 <- list("22"=c("Allocations logement"="AL",
                              "Autres revenus"="autres_rev"))
 
 ###Cas où le type de revenu de la personne de référence est de l'ARE (n2000==1)
-measure_vars1 <- list("22"=c("Allocations logement"="AL",
+measure_vars1 <- list("23"=c("Allocations logement"="AL",
+                             "Prime d'activité"="mont_PA",
+                             "RSA"="mont_RSA",
+                             "Allocation de solidarité spécifique du conjoint"="mont_ASS",
+                             "Allocation adulte handicapé"="AAH_tot",
+                             "Complément familial"="mont_CF",
+                             "Allocation de base (PAJE)"="mont_AB_paje",
+                             "Allocation de rentrée scolaire"="ars",
+                             "Allocations familiales"="mont_AF",
+                             "Allocation de soutien familial"="ASF",
+                             "ARE nette"="ARE_net",
+                             "Salaire net du conjoint"="sal_net_conj",
+                             "ARE nette du conjoint"="are_nette_conjoint",
+                             "Autres revenus"="autres_rev"),
+                      "22"=c("Allocations logement"="AL",
                              "Prime d'activité"="mont_PA",
                              "RSA"="mont_RSA",
                              "Allocation de solidarité spécifique du conjoint"="mont_ASS",
@@ -1240,7 +1353,7 @@ measure_vars1 <- list("22"=c("Allocations logement"="AL",
                              "ARE nette du conjoint"="are_nette_conjoint",
                              "Autres revenus"="autres_rev"),
                       "15"=c("Allocations logement"="AL",
-                             "RSA socle"="RSA_soc", 
+                              "RSA socle"="RSA_soc", 
                              "RSA activité"="RSA_act",
                              "PPE résiduelle"="ppe_resid",
                              "Allocation de solidarité spécifique du conjoint"="mont_ASS",

@@ -1,14 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Camille Dufour, Drees.
+# Nom du dernier auteur : Coraline Best, Drees.
 #
-# Noms des co-auteurs : Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
+# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -407,7 +407,11 @@ max_qf <<- bareme_var[["plafond_qf"]]*(nb_part-nb_adultes)*2 +
 ### Taxe d'habitation ###
 
 # Montant
-montant_TH <<- (nb_adultes==1)*bareme_var[["montant_th_1pers"]] + (nb_adultes!=1)*bareme_var[["mont_th_couple"]]
+if (year<23){
+  montant_TH <<- (nb_adultes==1)*bareme_var[["montant_th_1pers"]] + (nb_adultes!=1)*bareme_var[["mont_th_couple"]]
+} else {
+  montant_TH <<-0
+}
   
 # Abattement RFR
 if (year<20){
@@ -422,14 +426,14 @@ else {plaf_elig_th <<-0}
 
 
 #Seuil RFR dégrèvement total
-if (year>17){
+if (year>17 & year<23){
   seuil_rfr_degr_tot<<-bareme_var[["seuil_degrev_th_max_1p"]]+pmin(nb_part-1,2)*2*bareme_var[["supp_th_max_2demipart"]]+pmax(nb_part-2,0)*2*bareme_var[["supp_th_max_demipartsup"]]
 } else {
   seuil_rfr_degr_tot<<-0
 }
 
 #Seuil RFR dégrèvement dégressif
-if (year>17){
+if (year>17 & year<23){
   seuil_rfr_degr_deg<<-bareme_var[["seuil_degrev_th_deg_1p"]]+pmin(nb_part-1,2)*2*bareme_var[["supp_th_deg_2demipart"]]+pmax(nb_part-2,0)*2*bareme_var[["supp_th_deg_demipartsup"]]
 } else {
   seuil_rfr_degr_deg<<-0
@@ -439,12 +443,15 @@ if (year>17){
 ### CMU/ACS ###
 
 # Plafond CMUC
-plaf_cmuc <<- bareme_var[["plaf_cmuc_base"]] +
-  pmin(1,nb_adultes+nb_enfants-1)*bareme_var[["plaf_cmuc_1pac"]]+
-  pmax(0,pmin(1,nb_adultes+nb_enfants-2))*bareme_var[["plaf_cmuc_34pac"]]+
-  pmax(0,pmin(1,nb_adultes+nb_enfants-3))*bareme_var[["plaf_cmuc_34pac"]]+
-  pmax(0,(nb_adultes+nb_enfants-4))*bareme_var[["plaf_cmuc_5pluspac"]]
-
+if (year<23){
+  plaf_cmuc <<- bareme_var[["plaf_cmuc_base"]] +
+    pmin(1,nb_adultes+nb_enfants-1)*bareme_var[["plaf_cmuc_1pac"]]+
+    pmax(0,pmin(1,nb_adultes+nb_enfants-2))*bareme_var[["plaf_cmuc_34pac"]]+
+    pmax(0,pmin(1,nb_adultes+nb_enfants-3))*bareme_var[["plaf_cmuc_34pac"]]+
+    pmax(0,(nb_adultes+nb_enfants-4))*bareme_var[["plaf_cmuc_5pluspac"]]
+} else {
+  plaf_cmuc <<- 0
+}
 
 # Plafond ACS
 if (year>19){

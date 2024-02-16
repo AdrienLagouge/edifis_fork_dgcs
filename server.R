@@ -1,14 +1,14 @@
 ################################################################################
 #
-# Copyright (C) 2022. Logiciel élaboré par l'État, via la Drees.
+# Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Camille Dufour, Drees.
+# Nom du dernier auteur : Coraline Best, Drees.
 #
-# Noms des co-auteurs : Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 14/10/2022 avec la version 4.1.2 de R.
+# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -198,7 +198,7 @@ server <- function(session,input,output){
   
   output$message_echelle_rev<- renderUI({
     mylist <- paste("Avec les paramètres choisis,",ifelse(input$n2000==0,"le salaire net","l'allocation chômage (ARE) nette"),
-                    "de la personne de référence varie de 0 à",strong(ifelse(input$n2000==0,rev_max_net(),are_max_net())),"euros par tranche de",
+                    "de la personne de référence varie de 0 à",strong(ifelse(input$n2000==0,round(rev_max_net()),round(are_max_net()))),"euros par tranche de",
                     strong(ifelse(input$n2000==0,round(tr_rev_net()),round(tr_are_net()))),"euros, soit un revenu qui varie de 0 à",
                     strong(ifelse(input$n2000==0,input$n21,input$n13)),strong("%")," du SMIC par tranche de",
                     strong(ifelse(input$n2000==0,input$n22,input$n12)),strong("%")," du SMIC.")
@@ -260,12 +260,12 @@ server <- function(session,input,output){
   })
   
   #valeur par défaut du paramètre "Parent isolé au sens du RSA et de la PA" en fonction de la config familiale choisie
-  observeEvent(c(input$n1,input$n100,input$n200,input$n300,input$n400,input$n500),{
-    req(c(input$n1,input$n100,input$n200,input$n300,input$n400,input$n500))
-    if(input$n1==1 & (input$n100==1 | input$n200==1 | input$n300==1 | input$n400==1 | input$n500==1)) {
+  observeEvent(c(input$n1,input$n100,input$n200,input$n300,input$n400,input$n500,input$nbenfants),{
+    req(c(input$n1,input$n100,input$n200,input$n300,input$n400,input$n500,input$nbenfants))
+    if(input$n1==1 & (input$n100==1 | input$n200==1 | input$n300==1 | input$n400==1 | input$n500==1) & input$nbenfants>0) {
       updateNumericInput(session,"n18",value=1)
     }
-    if(input$n1>1 | (input$n100!=1 & input$n200!=1 & input$n300!=1 & input$n400!=1 & input$n500!=1)) {
+    if(input$n1>1 | (input$n100!=1 & input$n200!=1 & input$n300!=1 & input$n400!=1 & input$n500!=1) | input$nbenfants==0) {
       updateNumericInput(session,"n18",value=0)
     }
   }) 
@@ -529,8 +529,8 @@ server <- function(session,input,output){
     data <- head(create_data(),n=n25+1)
     
     mylist_TMI<-c(paste("Source : EDIFIS Maquette au 1er juillet",input$year,"de cas-types Drees-BRE\n"),
-                  paste("Note de lecture : quand",ifelse(input$n2000==0,"le salaire net","l'ARE nette"),"égal à",round(data[floor(n25/2),ifelse(input$n2000==0,"rev_act_net","ARE_net")]),"augmente de",round(data[floor(n25/2)+1,ifelse(input$n2000==0,"rev_act_net","ARE_net")]-data[floor(n25/2),ifelse(input$n2000==0,"rev_act_net","ARE_net")]),"euros,"),
-                  paste("le revenu disponible après prestations et impôts varie de",round(data[floor(n25/2)+1,"rev_disp"]-data[floor(n25/2),"rev_disp"]),"euros.\n"),
+                  paste("Note de lecture : Pour un adulte célibataire sans enfant percevant",ifelse(input$n2000==0,"un salaire net mensuel","l'ARE nette"),"de",round(data[floor(n25/2),ifelse(input$n2000==0,"rev_act_net","ARE_net")]), "euros", "une hausse de salaire net de",round(data[floor(n25/2)+1,ifelse(input$n2000==0,"rev_act_net","ARE_net")]-data[floor(n25/2),ifelse(input$n2000==0,"rev_act_net","ARE_net")]),"euros,"),
+                  paste("correspond à une hausse de",round(data[floor(n25/2)+1,"rev_disp"]-data[floor(n25/2),"rev_disp"]),"euros\n", "de revenu disponible après prestations et impôts."),
                   paste("Ainsi",round(100-100*data[floor(n25/2),"TMI_net"],0),"% de l'augmentation",ifelse(input$n2000==0,"de salaire net","d'ARE nette"),"revient au ménage in fine. Cette part correspond à l'effet marginal sur le revenu disponible d'une augmentation",ifelse(input$n2000==0,"de salaire net","d'ARE nette"),".\n"), 
                   paste("Principaux paramètres retenus : Situation conjugale =",ifelse(input$n1==1,"Seul(e)",ifelse(input$n1==2,"Marié(e)s ou pacsé(e)s","En concubinage")),"; Nombre d'enfants =",input$nbenfants,";\n"),
                   paste("Salaire du conjoint (en % du SMIC) =",input$n9,"; ARE du conjoint (en % du SMIC) =",input$n10,";\n"),
@@ -597,8 +597,10 @@ server <- function(session,input,output){
      data <- head(create_data(),n=n25+1)
      mvars <- input[[paste0("show_area",year(),n2000())]]
      print(paste("RE3 castype3",system.time(castype3(data,leg,bareme_var(),year(),mvars,n2000()))))
+     #return(castype3(data,leg,bareme_var(),year(),mvars,n2000()))
    })  #fin de RE3
    output$graph3 <- renderPlot({RE3()})
+   #output$graph3 <- renderGirafe({RE3()})
    
    # création du graphique téléchargeable 
    output$graph_emp.png <- downloadHandler(
@@ -624,8 +626,3 @@ server <- function(session,input,output){
    )
    
 }
-
-
-
-
-

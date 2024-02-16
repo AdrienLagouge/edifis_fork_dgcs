@@ -7736,6 +7736,51 @@ footer {
   margin-bottom: 20px;
 }
 
+
+#bs-select-79-2,/*2023 RA % smic brut*/
+#bs-select-79-6,/*2023 RA nets*/
+#bs-select-79-10,/*2023 Salaire net du conjoint*/
+#bs-select-79-11,/*2023 ARE nette du conjoint*/
+#bs-select-79-12,/*2023 Autres revenus*/
+#bs-select-79-13,/*2023 Total des RP du ménage*/
+
+#bs-select-81-5,/*2023 Total prélèvements sociaux*/
+
+#bs-select-80-3,/*2023 ARE nette PP*/
+#bs-select-80-10,/*2023 Salaire net du conjoint*/
+#bs-select-80-11,/*2023 ARE nette du conjoint*/
+#bs-select-80-12,/*2023 Autres revenus*/
+#bs-select-80-13,/*2023 Total des RP du ménage*/
+
+#bs-select-82-11, /* 2023 IR*/
+#bs-select-82-13, /* 2023 Total impôts*/
+
+#bs-select-83-8,/* 2023 AAH Montant */
+#bs-select-83-9,/* 2023 Max ASS,AAh du conjoint */
+#bs-select-83-12,/* 2023 RSA - Montant */
+#bs-select-83-19,/* 2023 PA - Montant total */
+#bs-select-83-14,/* 2023 Prime de noël */
+#bs-select-83-22,/* 2023 Chèque énergie */
+#bs-select-83-23, /* 2023 Total minima sociaux et PA */
+#bs-select-83-24, /* 2023 Total minima sociaux et PA (y compris énergie) */
+
+#bs-select-84-0, /* 2023 Allocations familiales */
+#bs-select-84-3, /* 2023 CF Montant */
+#bs-select-84-4,/* 2023 ASF */
+#bs-select-84-7,/* 2023 AB Paje */
+#bs-select-84-8,/* 2023 ARS */
+#bs-select-84-9,/* 2023 Total des PF */
+
+#bs-select-85-1,/* 2023 AL Montant */
+
+#bs-select-86-2,/* 2023 Total des prestations*/
+#bs-select-86-3,/* 2023 Total des prélèvements*/
+#bs-select-86-4,/* 2023 Rev Disp */
+#bs-select-86-9,/* 2023 Rev disp ajusté */
+
+
+
+
 #bs-select-71-2,/*2022 RA % smic brut*/
 #bs-select-71-6,/*2022 RA nets*/
 #bs-select-71-10,/*2022 Salaire net du conjoint*/
@@ -7755,7 +7800,7 @@ footer {
 #bs-select-74-14, /* 2022 Montant de TH*/
 #bs-select-74-15, /* 2022 Total impôts*/
 
-#bs-select-75-3,/* 2022 AAH Montant (PR) */
+#bs-select-75-8,/* 2022 AAH Montant */
 #bs-select-75-9,/* 2022 Max ASS,AAh du conjoint */
 #bs-select-75-12,/* 2022 RSA - Montant */
 #bs-select-75-19,/* 2022 PA - Montant total */
@@ -7800,7 +7845,7 @@ footer {
 #bs-select-66-14, /* 2021 Montant de TH*/
 #bs-select-66-15, /* 2021 Total impôts*/
 
-#bs-select-67-3,/* 2021 AAH Montant (PR) */
+#bs-select-67-8,/* 2021 AAH Montant  */
 #bs-select-67-9,/* 2021 Max ASS,AAh du conjoint */
 #bs-select-67-12,/* 2021 RSA - Montant */
 #bs-select-67-19,/* 2021 PA - Montant total */
@@ -7844,7 +7889,7 @@ footer {
 #bs-select-58-17, /* 2020 Montant de TH*/
 #bs-select-58-18, /* 2020 Total impôts*/
 
-#bs-select-59-3,/* 2020 AAH Montant (PR) */
+#bs-select-59-8,/* 2020 AAH Montant  */
 #bs-select-59-9,/* 2020 AAH Montant total */
 #bs-select-59-12,/* 2020 RSA - Montant */
 #bs-select-59-19,/* 2020 PA - Montant total */
@@ -7887,7 +7932,7 @@ footer {
 #bs-select-50-17, /* 2019 Montant de TH*/
 #bs-select-50-18, /* 2019 Total des impôts*/
 
-#bs-select-51-3,/* 2019 AAH Montant (PR) */
+#bs-select-51-8,/* 2019 AAH Montant  */
 #bs-select-51-9,/* 2019 AAH Montant total */
 #bs-select-51-12,/* 2019 RSA - Montant */
 #bs-select-51-19,/* 2019 PA - Montant total */
@@ -7929,7 +7974,7 @@ footer {
 #bs-select-42-17, /* 2018 Montant de TH*/
 #bs-select-42-18, /* 2018 Total des impôts*/
 
-#bs-select-43-3,/* 2018 AAH Montant (PR) */
+#bs-select-43-8,/* 2018 AAH Montant  */
 #bs-select-43-9,/* 2018 AAH Montant total */
 #bs-select-43-12,/* 2018 RSA - Montant */
 #bs-select-43-19,/* 2018 PA - Montant total */
@@ -7972,7 +8017,7 @@ footer {
 #bs-select-34-16, /* 2017 Montant de TH*/
 #bs-select-34-17, /* 2017 Total des impôts*/
 
-#bs-select-35-3,/* 2017 AAH Montant (PR) */
+#bs-select-35-8,/* 2017 AAH Montant  */
 #bs-select-35-9,/* 2017 AAH Montant total */
 #bs-select-35-12,/* 2017 RSA - Montant */
 #bs-select-35-19,/* 2017 PA - Montant total */
