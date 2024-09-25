@@ -2,13 +2,13 @@
 #
 # Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Coraline Best, Drees.
+# Nom du dernier auteur :  Gwenaelle Dumont, Drees.
 #
-# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Coraline Best, Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
+# Ce programme a été exécuté le 22/08/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -73,7 +73,9 @@ castype <- function(vecteur,bareme_var,year){
 ##year est l'année de législation sélectionnée
 
 print(bareme_var[["seuil_D9"]])
+
   
+
   #le vecteur est rempli selon le pas choisi par l'utilisateur
   for (i in 2:length(vecteur)){
     vecteur[i]=vecteur[i-1]+pas_sal_brut
@@ -288,10 +290,9 @@ print(bareme_var[["seuil_D9"]])
       #Max(AAH,ASS) du conjoint (non cumul)
       max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH)
       
-    } else {
+    } else { if (year>23){
     
-      br_conj_AAH <- pmax(0,rev_act_dec*bareme_var[["abatt_rfr"]]-bareme_var[["AAH_abatt_general"]]-nb_enfants*bareme_var[["AAH_abatt_majo"]])
-                             +(autres_rev+are_nette_conjoint+ARE_net)*bareme_var[["abatt_rfr"]]+
+    br_conj_AAH <- autres_rev*bareme_var[["abatt_rfr"]]+
         pmin(sal_declar_conj,bareme_var[["AAH_plafond_abatt_salaire"]])*bareme_var[["AAH_abatt_salaire_t1"]] +
         pmax(sal_declar_conj-bareme_var[["AAH_plafond_abatt_salaire"]],0)*bareme_var[["AAH_abatt_salaire_t2"]]
       
@@ -301,7 +302,21 @@ print(bareme_var[["seuil_D9"]])
       #Max(AAH,ASS) du conjoint (non cumul)
       max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH)
       
+    } else {
+      br_conj_AAH <- pmax(0,rev_act_dec*bareme_var[["abatt_rfr"]]-bareme_var[["AAH_abatt_general"]]-nb_enfants*bareme_var[["AAH_abatt_majo"]])
+                             +(autres_rev+are_nette_conjoint+ARE_net)*bareme_var[["abatt_rfr"]]+
+        pmin(sal_declar_conj,bareme_var[["AAH_plafond_abatt_salaire"]])*bareme_var[["AAH_abatt_salaire_t1"]] +
+        pmax(sal_declar_conj-bareme_var[["AAH_plafond_abatt_salaire"]],0)*bareme_var[["AAH_abatt_salaire_t2"]]
+      
+      #Montant (conjoint)
+      mont_conj_AAH <- (handicap_conjoint>0)*SI(plaf_AAH-br_conj_AAH>=bareme_var[["AAH_montant"]],bareme_var[["AAH_montant"]],pmax(0,plaf_AAH-br_conj_AAH))
+      
+      #Max(AAH,ASS) du conjoint (non cumul)
+      max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH) 
+     
     }
+    }
+      
     
 
   ######################################
@@ -548,9 +563,33 @@ print(bareme_var[["seuil_D9"]])
       #Max(AAH,ASS) du conjoint (non cumul)
       max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH)
       
-    } else {
+    } else { if (year>23){
 
-      # Base ressources
+          # Base ressources----
+      br_AAH <- pmax(0,(autres_rev+ARE_net)*bareme_var[["abatt_rfr"]]+
+                       pmin(rev_act_dec,bareme_var[["AAH_plafond_abatt_salaire"]])*bareme_var[["AAH_abatt_salaire_t1"]] +
+                       pmax(rev_act_dec-bareme_var[["AAH_plafond_abatt_salaire"]],0)*bareme_var[["AAH_abatt_salaire_t2"]])
+      
+      # Montant
+      mont_AAH <- (handicap_personne>0)*SI(plaf_AAH-br_AAH>=bareme_var[["AAH_montant"]],bareme_var[["AAH_montant"]],pmax(0,plaf_AAH-br_AAH))
+   
+      
+      
+      
+      # Majoration pour vie autonome
+      mva <- (vecteur==0)*(handicap_personne==2)*(mont_AAH==bareme_var[["AAH_montant"]])*(AL>0)*bareme_var[["AAH_mva"]]
+      
+      #Majoration vie autonome (conjoint)
+      mva_conj <- (sal_brut_conjoint==0)*(handicap_conjoint==2)*(mont_conj_AAH==bareme_var[["AAH_montant"]])*(AL>0)*bareme_var[["AAH_mva"]]
+      
+      #Total
+      AAH_tot <- mont_AAH+mva+mont_conj_AAH+mva_conj
+      
+      #Max(AAH,ASS) du conjoint (non cumul)
+      max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH) 
+    } else {
+      
+ # Base ressources
       br_AAH <- pmax(0,(sal_declar_conj+ are_nette_conjoint)*bareme_var[["abatt_rfr"]]-bareme_var[["AAH_abatt_general"]]-nb_enfants*bareme_var[["AAH_abatt_majo"]])+ (autres_rev  + ARE_net +  SI(mont_conj_AAH==max_aah_ass_conj,0,mont_ASS))*bareme_var[["abatt_rfr"]]+
         pmin(rev_act_dec,bareme_var[["AAH_plafond_abatt_salaire"]])*bareme_var[["AAH_abatt_salaire_t1"]] +
         pmax(rev_act_dec-bareme_var[["AAH_plafond_abatt_salaire"]],0)*bareme_var[["AAH_abatt_salaire_t2"]]
@@ -570,10 +609,10 @@ print(bareme_var[["seuil_D9"]])
       #Max(AAH,ASS) du conjoint (non cumul)
       max_aah_ass_conj <- pmax(mont_ASS,mont_conj_AAH)
     }
+  }
+      
+      
     
-  
-  
-  
  
   ###########################
   #### Calcul RSA socle #####
@@ -1180,6 +1219,30 @@ if (year>19) {elig_plaf_th <- 0}
   ############################################ de global.R #########################################
   ##################################################################################################
   
+  
+  if (year==24){
+    df <- data.frame(vecteur,tps_travail,percen_smic_tps_plein,ARE_net,sal_ref_net,
+                     cotis_emp,fillon_exo,cotis_sal,csg_ded,csg_non_ded,
+                     total_ps,
+                     cout_travail,
+                     rev_act_net,tps_trav_net,perc_smic_net_tpsplein,rev_act_dec,
+                     sal_net_conj,are_nette_conjoint,autres_rev,rev_primaire,
+                     br_ASS,rev_impo_n_1,rev_impo_n_2,revimp_n_2_abatt,
+                     mont_ASS,ASS_conj,BR_AL,AL,mont_AF,plaf_CF,plaf_CF_majo,mont_CF,ASF,plaf_AB_partiel,plaf_AB_plein,
+                     mont_AB_paje,br_AAH,mont_AAH,mva,br_conj_AAH,mont_conj_AAH,mva_conj,AAH_tot,max_aah_ass_conj,
+                     fl_RSA,br_rsa,mont_RSA,prime_noel,max_noel_ass_conj,fl_PA,br_pa,bonus_pa,bonus_servi,mont_PA,
+                     total_minima_soc,total_minima_soc_cheque_energie,
+                     ars,total_pf,
+                     rfr,rfr_par_part,imp_par_part,imp_tot,rev_imp_part,imp_part_sansdemi,imp_tot_sansdemi,avantage_qf,imp_plaf_qf,decote,
+                     imp_decote_RI,imp_recouvr,av_QC,mont_TH_predegr,mont_TH,rev_trav_net,rev_hors_trav,
+                     presta,prelev,rev_disp,nv_vie,TMI_net,EM_net,TMI_superbrut,decile,CMUc,ACS,energie,
+                     rev_ajust,check.names=F)
+    
+    colnames(df) <- colnames24
+    for (i in 1:ncol(df)){
+      label(df[,i]) <- labels24[i]
+    }
+  } else { 
   if (year==23){
     df <- data.frame(vecteur,tps_travail,percen_smic_tps_plein,ARE_net,sal_ref_net,
                      cotis_emp,fillon_exo,cotis_sal,csg_ded,csg_non_ded,
@@ -1444,6 +1507,7 @@ if (year>19) {elig_plaf_th <- 0}
   }
   }
   } 
+  }
   }
   }# fin du else
   

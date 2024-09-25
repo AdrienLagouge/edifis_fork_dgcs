@@ -2,13 +2,13 @@
 #
 # Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Coraline Best, Drees.
+# Nom du dernier auteur :  GWenaelle Dumont, Drees.
 #
-# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Coraline Best, Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
+# Ce programme a été exécuté le 17/07/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/

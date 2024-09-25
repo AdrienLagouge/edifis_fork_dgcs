@@ -32,13 +32,14 @@ Mettre la nouvelle maquette au format des autres maquettes du dossier
 ### 3) Actualiser global.R : appel des programmes R et définition de listes
 
 Création des listes 'colnames#', 'labels#', 'rev#', 'prelevements_soc#', 'impot_tax#', 'min_soc#', 'pf_#', 'alloc_log#' et 'rev_disp#' pour l'année N (utilisées dans l'onglet 3)
-Enrichissement des listes 'libelles', 'measure_vars0' et 'measure_vars1' pour l'année N (utilisées dans l'onglet 4)
+Enrichissement des listes 'libelles', 'measure_vars0' et 'measure_vars1' pour l'année N (utilisées dans l'onglet. Attention, le nombre et l'ordre des lignes peut varier d'une maquette à l'autre ce qui peut changer les résultats. 
 
 ### 4) Actualiser ui.R : définition de l'interface utilisateur de l'application
 
 Dans le 1er  onglet, adapter le texte à la nouvelle année
 Dans le 2ème onglet, ajouter la nouvelle année aux option du sliderInput
 Dans les 3ème et 4ème onglets, ajouter les conditionalPanel propres à la nouvelle année
+Utiliser le bouton "Run App pour générer de premiers résultats"
 
 ### 5) Actualiser R/bareme.R : définition de listes servant à l'import des paramètres législatifs
 
@@ -56,6 +57,11 @@ Si des changements législatifs affectent les calculs, les adapter
 ### 8) Actualiser www/bootstrapv5.css
 
 Enrichir la liste des éléments à mettre en gras dans les menus déroulants
+Pour cela, ouvrir le fichier "bootstrapv5" tout en bas, se trouvent des blocs 
+"#bs-select-87-2,/* 2024 RA % smic brut*/
+#bs-select-87-6,/* 2024 RA nets*/"
+Ces blocs définissent la police "Gras" pour le texte et, chaque année, la référence ligne ("87-2" ici change).
+Pour mettre à jour, il faut changer l'année et changer le code ligne. Pour trouver le nouveau, il faut choisir l'item de la liste déroulante à mettre à jour, cliquer droit et faire "Inspecter". Le code de l'année apparaîtra dans la console à droite de l'écran ce qui permettra de mettre à jour le code. 
 
 ### 9) Finaliser l'actualisation
 

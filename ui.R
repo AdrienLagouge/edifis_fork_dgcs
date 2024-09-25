@@ -2,13 +2,13 @@
 #
 # Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur : Coraline Best, Drees.
+# Nom du dernier auteur : Gwenaelle Dumont, Drees.
 #
-# Noms des co-auteurs : Camille Dufour, Simon Fredon et Chloé Pariset
+# Noms des co-auteurs : Coraline Best, Camille Dufour, Simon Fredon et Chloé Pariset
 #
 # Ce programme informatique a été développé par la Drees. Il permet de de reproduire l'application R-Shiny "Edifis". 
 #
-# Ce programme a été exécuté le 30/01/2024 avec la version 4.2.2 de R.
+# Ce programme a été exécuté le 22/08/2024 avec la version 4.2.2 de R.
 #
 # L'application Edifis peut être consultée sur le site de la 
 # DREES : https://drees.shinyapps.io/Drees_Maquette_Edifis/
@@ -173,7 +173,7 @@ ui <-
                                    h1("Guide d'usage de la maquette EDIFIS"),
                                    h3("Objectif"),
                                    p(HTML("L'objectif est d'estimer le revenu disponible mensuel d'un ménage-type en fonction du salaire de la personne de référence. 
-                                      La maquette présente au choix les résultats de la législation en vigueur au 01/07 des années 2015 à 2023 sur le champ des prélèvements et des prestations légales. 
+                                      La maquette présente au choix les résultats de la législation en vigueur au 01/07 des années 2015 à 2024 sur le champ des prélèvements et des prestations légales. 
                                       <br/>La maquette met en évidence les effets redistributifs stylisés du système socio-fiscal par type de ménage. 
                                           Attention, elle ne prend pas en compte le poids des types de ménage dans la population totale  donc elle ne permet pas d'en déduire directement les effets redistributifs agrégés 
                                           sur la population totale, ni de simuler des droits individuels.")),
@@ -207,7 +207,7 @@ ui <-
                  tabPanel(title="Choix des paramètres",value="panel1",icon = icon("gear"),
                           fluidPage(
                             column(4,
-                                   sliderInput("year","Année de législation",min=2015,max=2023,value=2023,step=1,sep=""),
+                                   sliderInput("year","Année de législation",min=2015,max=2024,value=2024,step=1,sep=""),
                                    h3("Echelle de revenus de la personne de référence (PR)"),
                                    p("La maquette calcule le revenu disponible d'un ménage-type, pour des revenus de la personne de référence allant de 
                                      0 à une valeur maximale suivant un pas à paramétrer."),
@@ -569,6 +569,29 @@ ui <-
                                                           selected=c("Total des prestations","Total des impôts","Revenu disponible"),
                                                           multiple = TRUE)
                             ),
+                            conditionalPanel(condition="input.year==2024 & input.n2000==0",
+                                             pickerInput("rev240","Revenus primaires",rev24,
+                                                         selected=c("Salaire brut en % du Smic brut temps plein (PR)","Salaire net (PR)", "Total des revenus primaires du ménage",`selected-text-format` = "count > 3"),
+                                                         multiple = TRUE)),
+                            conditionalPanel(condition="input.year==2024 & input.n2000==1",
+                                             pickerInput("rev241","Revenus primaires",rev24,
+                                                         selected=c("ARE nette (PR)","Total des revenus primaires du ménage",`selected-text-format` = "count > 3"),
+                                                         multiple = TRUE)),
+                            conditionalPanel(condition="input.year==2024",
+                                             pickerInput("prevsoc24","Prélèvements sociaux",prelevements_soc24,
+                                                         multiple = TRUE),
+                                             pickerInput("impotax24","Impôts",impot_tax24,
+                                                         multiple = TRUE),
+                                             pickerInput("minsoc24","Minima sociaux et prime d'activité",min_soc24,
+                                                         multiple = TRUE),
+                                             pickerInput("pf24",HTML("Prestations familiales <br/> (hors aides à la garde)"),pf_24,
+                                                         multiple = TRUE),
+                                             pickerInput("alloclog24",HTML("Allocations logement <br/> des locataires"),alloc_log24,
+                                                         multiple = TRUE),
+                                             pickerInput("revdisp24","Revenus disponibles",rev_disp24,
+                                                         selected=c("Total des prestations","Total des impôts","Revenu disponible"),
+                                                         multiple = TRUE)
+                            ),
                             
                             
                           width = 3),
@@ -705,6 +728,17 @@ ui <-
                                                             pickerInput("show_area231",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
                                                                         choices=measure_vars1[["23"]],
                                                                         selected=measure_vars1[["23"]],
+                                                                        multiple = TRUE)),
+                                           conditionalPanel(condition="input.year==2024 & input.n2000==0",
+                                                            pickerInput("show_area240",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
+                                                                        choices=measure_vars0[["24"]],
+                                                                        selected=measure_vars0[["24"]],
+                                                                        multiple = TRUE)                 
+                                           ),
+                                           conditionalPanel(condition="input.year==2024 & input.n2000==1",
+                                                            pickerInput("show_area241",HTML("Prestations et revenus primaires <br/>dans le graphique empilé"),
+                                                                        choices=measure_vars1[["24"]],
+                                                                        selected=measure_vars1[["24"]],
                                                                         multiple = TRUE)),
         
                                width = 3),
