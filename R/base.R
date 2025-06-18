@@ -495,7 +495,7 @@ choix_input <<- function(n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n15,n16,n17,n18,n
   ### AAH ###
   #Plafond
   if (year>23){
-    plaf_AAH <<- bareme_var[["AAH_plaf_seul"]]
+    plaf_AAH <<- bareme_var[["AAH_plaf_seul"]] + bareme_var[["AAH_plaf_sup_pac"]]*nb_enfants
   } else { if (year>14){
     plaf_AAH <<- (nb_adultes==1)*bareme_var[["AAH_plaf_seul"]] + (nb_adultes!=1)*bareme_var[["AAH_plaf_couple"]] + bareme_var[["AAH_plaf_sup_pac"]]*nb_enfants
   } else { 

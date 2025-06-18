@@ -7736,6 +7736,48 @@ footer {
   margin-bottom: 20px;
 }
 
+#bs-select-87-2,/*2024 RA % smic brut*/
+#bs-select-87-6,/*2024 RA nets*/
+#bs-select-87-10,/*2024 Salaire net du conjoint*/
+#bs-select-87-11,/*2024 ARE nette du conjoint*/
+#bs-select-87-12,/*2024 Autres revenus*/
+#bs-select-87-13,/*2024 Total des RP du ménage*/
+
+#bs-select-89-5,/*2024 Total prélèvements sociaux*/
+
+#bs-select-88-3,/*2024 ARE nette PP*/
+#bs-select-88-10,/*2024 Salaire net du conjoint*/
+#bs-select-88-11,/*2024 ARE nette du conjoint*/
+#bs-select-88-12,/*2024 Autres revenus*/
+#bs-select-88-13,/*2024 Total des RP du ménage*/
+
+#bs-select-90-11, /* 2024 IR*/
+#bs-select-90-13, /* 2024 Total impôts*/
+
+#bs-select-91-8,/* 2024 AAH Montant */
+#bs-select-91-9,/* 2024 Max ASS,AAh du conjoint */
+#bs-select-91-12,/* 2024 RSA - Montant */
+#bs-select-91-19,/* 2024 PA - Montant total */
+#bs-select-91-14,/* 2024 Prime de noël */
+#bs-select-91-22,/* 2024 Chèque énergie */
+#bs-select-91-23, /* 2024 Total minima sociaux et PA */
+#bs-select-91-24, /* 2024 Total minima sociaux et PA (y compris énergie) */
+
+#bs-select-92-0, /* 2024 Allocations familiales */
+#bs-select-92-3, /* 2024 CF Montant */
+#bs-select-92-4,/* 2024 ASF */
+#bs-select-92-7,/* 2024 AB Paje */
+#bs-select-92-8,/* 2024 ARS */
+#bs-select-92-9,/* 2024 Total des PF */
+
+#bs-select-93-1,/* 2024 AL Montant */
+
+#bs-select-94-2,/* 2024 Total des prestations*/
+#bs-select-94-3,/* 2024 Total des prélèvements*/
+#bs-select-94-4,/* 2024 Rev Disp */
+#bs-select-94-9,/* 2024 Rev disp ajusté */
+
+
 
 #bs-select-79-2,/*2023 RA % smic brut*/
 #bs-select-79-6,/*2023 RA nets*/
