@@ -83,16 +83,146 @@ server <- function(session, input, output) {
   })
 
   # Extraction de la liste des paramètres pour display dans module variantiel
-  output$display_parameters <- renderUI({
-    tags$ul(
-      lapply(names(bareme_var()), function(name) {
-        tags$li(
-          tags$strong(name),
-          ": ",
-          bareme_var()[[name]]
-        )
-      })
-    )
+  # Copie modifiable du barème
+  bareme_var_diff <- reactiveVal(NULL)
+
+  # Copie modifiable du barème
+  bareme_var_diff <- reactiveVal(NULL)
+
+  # Initialiser la copie au démarrage
+  observe({
+    if (is.null(bareme_var_diff())) {
+      bareme_var_diff(bareme_var())
+    }
+  })
+
+  # Mettre à jour les choix des pickerInput
+  observeEvent(
+    bareme_var(),
+    {
+      bareme <- bareme_var()
+      req(bareme) # S'assurer que bareme existe
+      noms <- as.character(names(bareme))
+      req(length(noms) > 0)
+
+      # Debug: afficher la structure
+      print("Structure du bareme:")
+      print(str(bareme))
+      print("Names:")
+      print(names(bareme))
+
+      # Mettre à jour le pickerInput pour la modification (sans sélection par défaut)
+      updatePickerInput(
+        session,
+        "selected_labels",
+        choices = noms,
+        selected = character(0)
+      )
+
+      # Mettre à jour le pickerInput pour l'affichage du barème original
+      updatePickerInput(
+        session,
+        "display_original",
+        choices = noms,
+        selected = character(0)
+      )
+
+      # Mettre à jour le pickerInput pour l'affichage du barème modifié
+      updatePickerInput(
+        session,
+        "display_modifie",
+        choices = noms,
+        selected = character(0)
+      )
+    },
+    ignoreNULL = TRUE,
+    ignoreInit = FALSE
+  )
+
+  # Afficher le barème original (filtré selon la sélection)
+  output$bareme_original <- renderPrint({
+    bareme <- bareme_var()
+
+    if (
+      !is.null(input$display_original) && length(input$display_original) > 0
+    ) {
+      bareme[input$display_original]
+    } else {
+      cat("Veuillez sélectionner au moins un élément à afficher.")
+    }
+  })
+
+  # Créer dynamiquement les champs de saisie pour les éléments sélectionnés uniquement
+  output$input_fields <- renderUI({
+    req(input$selected_labels)
+
+    bareme <- bareme_var()
+    selected <- input$selected_labels
+
+    if (length(selected) == 0) {
+      return(p(
+        "Veuillez sélectionner au moins un élément à modifier.",
+        class = "text-muted"
+      ))
+    }
+
+    lapply(selected, function(nom) {
+      idx <- which(names(bareme) == nom)
+      numericInput(
+        inputId = paste0("val_", nom),
+        label = nom,
+        value = bareme[nom],
+        step = 0.1
+      )
+    })
+  })
+
+  # Bouton pour appliquer les modifications
+  observeEvent(input$apply_btn, {
+    req(input$selected_labels)
+
+    bareme <- bareme_var()
+    noms <- names(bareme)
+    selected <- input$selected_labels
+
+    # Commencer avec une copie du barème original
+    nouveau_bareme <- bareme
+
+    # Mettre à jour uniquement les valeurs sélectionnées
+    for (nom in selected) {
+      nouveau_bareme[nom] <- input[[paste0("val_", nom)]]
+    }
+
+    bareme_var_diff(nouveau_bareme)
+
+    showNotification("Modifications appliquées avec succès !", type = "message")
+  })
+
+  # Bouton pour réinitialiser
+  observeEvent(input$reset_btn, {
+    bareme <- bareme_var()
+    bareme_var_diff(bareme)
+
+    # Réinitialiser les inputs des éléments sélectionnés
+    if (!is.null(input$selected_labels)) {
+      for (nom in input$selected_labels) {
+        updateNumericInput(session, paste0("val_", nom), value = bareme[nom])
+      }
+    }
+
+    showNotification("Valeurs réinitialisées", type = "warning")
+  })
+
+  # Afficher le barème modifié (filtré selon la sélection)
+  output$bareme_modifie <- renderPrint({
+    req(bareme_var_diff())
+    bareme <- bareme_var_diff()
+
+    if (!is.null(input$display_modifie) && length(input$display_modifie) > 0) {
+      bareme[input$display_modifie]
+    } else {
+      cat("Veuillez sélectionner au moins un élément à afficher.")
+    }
   })
 
   # fonction réactive n2000() retourne le type de revenus choisi par l'utilisateur en format numérique
