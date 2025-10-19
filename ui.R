@@ -1707,6 +1707,12 @@ ui <-
         )
       ),
       ######################### 5eme onglet #########################
-      tabPanel("Module variantiel", icon = icon("diagram-project"))
+      tabPanel(
+        "Module variantiel",
+        icon = icon("diagram-project"),
+        fluidPage(
+          uiOutput("display_parameters")
+        )
+      )
     ),
   ) # fin de la fonction Ui

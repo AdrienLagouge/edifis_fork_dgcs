@@ -82,6 +82,19 @@ server <- function(session, input, output) {
     return(bareme_var)
   })
 
+  # Extraction de la liste des paramètres pour display dans module variantiel
+  output$display_parameters <- renderUI({
+    tags$ul(
+      lapply(names(bareme_var()), function(name) {
+        tags$li(
+          tags$strong(name),
+          ": ",
+          bareme_var()[[name]]
+        )
+      })
+    )
+  })
+
   # fonction réactive n2000() retourne le type de revenus choisi par l'utilisateur en format numérique
   n2000 <- reactive({
     n2000 <- as.numeric(input$n2000)
