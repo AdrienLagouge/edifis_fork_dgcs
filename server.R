@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2024. Logiciel élaboré par l'État, via la Drees.
 #
-# Nom du dernier auteur :  GWenaelle Dumont, Drees.
+# Nom du dernier auteur :  Gwenaelle Dumont, Drees.
 #
 # Noms des co-auteurs : Coraline Best, Camille Dufour, Simon Fredon et Chloé Pariset
 #
