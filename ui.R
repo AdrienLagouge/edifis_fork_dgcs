@@ -1811,58 +1811,60 @@ ui <-
             "Module variantiel",
             icon = icon("diagram-project"),
 
-            br(),
-
-            card(
-              card_header("Barème Original"),
-              pickerInput(
-                "display_original",
-                "Éléments à afficher :",
-                choices = NULL,
-                multiple = TRUE,
-                selected = character(0),
-                options = list(
-                  `actions-box` = TRUE,
-                  `selected-text-format` = "count > 3",
-                  `none-selected-text` = "Aucune sélection"
-                )
+            # Ajouter les dépendances virtualSelect
+            tags$head(
+              tags$link(
+                rel = "stylesheet",
+                href = "https://cdn.jsdelivr.net/npm/virtual-select-plugin@1.0.38/dist/virtual-select.min.css"
               ),
-              verbatimTextOutput("bareme_original")
-            ),
-
-            card(
-              card_header("Modifier les Valeurs"),
-              uiOutput("input_fields"),
-              br(),
-              actionButton(
-                "reset_btn",
-                "Réinitialiser",
-                icon = icon("rotate-left")
-              ),
-              actionButton(
-                "apply_btn",
-                "Appliquer les modifications",
-                icon = icon("check"),
-                class = "btn-primary"
+              tags$script(
+                src = "https://cdn.jsdelivr.net/npm/virtual-select-plugin@1.0.38/dist/virtual-select.min.js"
               )
             ),
 
-            card(
-              card_header("Barème Modifié (bareme_var_diff)"),
-              pickerInput(
-                "display_modifie",
-                "Éléments à afficher :",
-                choices = NULL,
-                multiple = TRUE,
-                selected = character(0),
-                options = list(
-                  `actions-box` = TRUE,
-                  `selected-text-format` = "count > 3",
-                  `none-selected-text` = "Aucune sélection"
-                )
-              ),
-              verbatimTextOutput("bareme_modifie")
-            )
+            h4("Barème original"),
+            virtualSelectInput(
+              inputId = "selected_labels",
+              label = "Éléments à afficher :",
+              choices = NULL,
+              multiple = TRUE,
+              selected = character(0),
+              search = TRUE,
+              showSelectedOptionsFirst = TRUE,
+              selectAllText = "Tout sélectionner",
+              deselectAllText = "Tout désélectionner",
+              searchPlaceholderText = "Rechercher...",
+              noOptionsText = "Aucune option disponible",
+              noSearchResultsText = "Aucun résultat",
+              optionsSelectedText = "options sélectionnées",
+              optionSelectedText = "option sélectionnée",
+              allOptionsSelectedText = "Toutes les options sont sélectionnées",
+              hasDropdownWrapper = TRUE
+            ),
+            verbatimTextOutput("bareme_original"),
+
+            hr(),
+
+            h4("Modifier les Valeurs"),
+            uiOutput("input_fields"),
+            br(),
+            actionButton(
+              "reset_btn",
+              "Réinitialiser",
+              icon = icon("rotate-left")
+            ),
+            br(),
+            actionButton(
+              "apply_btn",
+              "Appliquer les modifications",
+              icon = icon("check"),
+              class = "btn-primary"
+            ),
+
+            hr(),
+
+            h4("Barème modifié (bareme_var_diff)"),
+            verbatimTextOutput("bareme_modifie")
           )
         )
       )

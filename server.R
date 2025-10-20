@@ -86,9 +86,6 @@ server <- function(session, input, output) {
   # Copie modifiable du barème
   bareme_var_diff <- reactiveVal(NULL)
 
-  # Copie modifiable du barème
-  bareme_var_diff <- reactiveVal(NULL)
-
   # Initialiser la copie au démarrage
   observe({
     if (is.null(bareme_var_diff())) {
@@ -96,7 +93,6 @@ server <- function(session, input, output) {
     }
   })
 
-  # Mettre à jour les choix des pickerInput
   observeEvent(
     bareme_var(),
     {
@@ -104,35 +100,12 @@ server <- function(session, input, output) {
       req(bareme) # S'assurer que bareme existe
       noms <- as.character(names(bareme))
       req(length(noms) > 0)
-
-      # Debug: afficher la structure
-      print("Structure du bareme:")
-      print(str(bareme))
-      print("Names:")
-      print(names(bareme))
-
-      # Mettre à jour le pickerInput pour la modification (sans sélection par défaut)
-      updatePickerInput(
-        session,
-        "selected_labels",
+      # Mettre à jour le virtualSelectInput pour la modification (sans sélection par défaut)
+      updateVirtualSelect(
+        session = session,
+        inputId = "selected_labels",
         choices = noms,
-        selected = character(0)
-      )
-
-      # Mettre à jour le pickerInput pour l'affichage du barème original
-      updatePickerInput(
-        session,
-        "display_original",
-        choices = noms,
-        selected = character(0)
-      )
-
-      # Mettre à jour le pickerInput pour l'affichage du barème modifié
-      updatePickerInput(
-        session,
-        "display_modifie",
-        choices = noms,
-        selected = character(0)
+        selected = noms
       )
     },
     ignoreNULL = TRUE,
@@ -143,10 +116,8 @@ server <- function(session, input, output) {
   output$bareme_original <- renderPrint({
     bareme <- bareme_var()
 
-    if (
-      !is.null(input$display_original) && length(input$display_original) > 0
-    ) {
-      bareme[input$display_original]
+    if (!is.null(input$selected_labels) && length(input$selected_labels) > 0) {
+      bareme[input$selected_labels]
     } else {
       cat("Veuillez sélectionner au moins un élément à afficher.")
     }
@@ -171,8 +142,7 @@ server <- function(session, input, output) {
       numericInput(
         inputId = paste0("val_", nom),
         label = nom,
-        value = bareme[nom],
-        step = 0.1
+        value = bareme[nom]
       )
     })
   })
@@ -218,8 +188,8 @@ server <- function(session, input, output) {
     req(bareme_var_diff())
     bareme <- bareme_var_diff()
 
-    if (!is.null(input$display_modifie) && length(input$display_modifie) > 0) {
-      bareme[input$display_modifie]
+    if (!is.null(input$selected_labels) && length(input$selected_labels) > 0) {
+      bareme[input$selected_labels]
     } else {
       cat("Veuillez sélectionner au moins un élément à afficher.")
     }
