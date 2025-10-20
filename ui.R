@@ -1821,26 +1821,42 @@ ui <-
                 src = "https://cdn.jsdelivr.net/npm/virtual-select-plugin@1.0.38/dist/virtual-select.min.js"
               )
             ),
+            
+            tags$head(
+              tags$style(HTML("
+      /* Cibler le conteneur du visualSelectInput */
+      .visual-select-container {
+        position: relative;
+        z-index: 10000 !important;
+      }
+      
+      /* S'assurer que le dropdown reste au premier plan */
+      .bootstrap-select.btn-group .dropdown-menu {
+        z-index: 10001 !important;
+      }
+    "))
+            ),
 
             h4("Barème original"),
-            virtualSelectInput(
-              inputId = "selected_labels",
-              label = "Éléments à afficher :",
-              choices = NULL,
-              multiple = TRUE,
-              selected = character(0),
-              search = TRUE,
-              showSelectedOptionsFirst = TRUE,
-              selectAllText = "Tout sélectionner",
-              deselectAllText = "Tout désélectionner",
-              searchPlaceholderText = "Rechercher...",
-              noOptionsText = "Aucune option disponible",
-              noSearchResultsText = "Aucun résultat",
-              optionsSelectedText = "options sélectionnées",
-              optionSelectedText = "option sélectionnée",
-              allOptionsSelectedText = "Toutes les options sont sélectionnées",
-              hasDropdownWrapper = TRUE
-            ),
+            div(class = "visual-select-container",
+              virtualSelectInput(
+                inputId = "selected_labels",
+                label = "Éléments à afficher :",
+                choices = NULL,
+                multiple = TRUE,
+                selected = character(0),
+                search = TRUE,
+                showSelectedOptionsFirst = TRUE,
+                selectAllText = "Tout sélectionner",
+                deselectAllText = "Tout désélectionner",
+                searchPlaceholderText = "Rechercher...",
+                noOptionsText = "Aucune option disponible",
+                noSearchResultsText = "Aucun résultat",
+                optionsSelectedText = "options sélectionnées",
+                optionSelectedText = "option sélectionnée",
+                allOptionsSelectedText = "Toutes les options sont sélectionnées",
+                hasDropdownWrapper = TRUE
+            )),
             verbatimTextOutput("bareme_original"),
 
             hr(),
