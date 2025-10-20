@@ -1881,7 +1881,19 @@ ui <-
 
             h4("Barème modifié (bareme_var_diff)"),
             verbatimTextOutput("bareme_modifie")
-          )
+          ),
+          
+        tabPanel("Résultats de la variante",icon = icon("table"),
+           mainPanel(
+                HTML("<br><br>"),
+                div(
+                  style = "display: inline-block; width: 900px;",
+                  dataTableOutput("base_diff"),
+                  style = "font-size:70%"
+                ),
+                HTML("<br><br>")
+              )
+        )
         )
       )
     )

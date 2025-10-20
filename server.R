@@ -898,7 +898,118 @@ server <- function(session, input, output) {
     ))
     return(data)
   })
+  
+ # fonction réactive create_data_diff() crée la table de données totale en fonction des paramètres choisis dans l'onglet 2 et du barème modifié
+  create_data_diff <- reactive({
+    n1 <- as.numeric(input$n1)
+    n2 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 1) +
+          (input$nbenfants > 1) * (input$n200 == 1) +
+          (input$nbenfants > 2) * (input$n300 == 1) +
+          (input$nbenfants > 3) * (input$n400 == 1) +
+          (input$nbenfants > 4) * (input$n500 == 1)
+      )
+    n3 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 2) +
+          (input$nbenfants > 1) * (input$n200 == 2) +
+          (input$nbenfants > 2) * (input$n300 == 2) +
+          (input$nbenfants > 3) * (input$n400 == 2) +
+          (input$nbenfants > 4) * (input$n500 == 2)
+      )
+    n4 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 3) +
+          (input$nbenfants > 1) * (input$n200 == 3) +
+          (input$nbenfants > 2) * (input$n300 == 3) +
+          (input$nbenfants > 3) * (input$n400 == 3) +
+          (input$nbenfants > 4) * (input$n500 == 3)
+      )
+    n5 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 4) +
+          (input$nbenfants > 1) * (input$n200 == 4) +
+          (input$nbenfants > 2) * (input$n300 == 4) +
+          (input$nbenfants > 3) * (input$n400 == 4) +
+          (input$nbenfants > 4) * (input$n500 == 4)
+      )
+    n6 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 5) +
+          (input$nbenfants > 1) * (input$n200 == 5) +
+          (input$nbenfants > 2) * (input$n300 == 5) +
+          (input$nbenfants > 3) * (input$n400 == 5) +
+          (input$nbenfants > 4) * (input$n500 == 5)
+      )
+    n7 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 6) +
+          (input$nbenfants > 1) * (input$n200 == 6) +
+          (input$nbenfants > 2) * (input$n300 == 6) +
+          (input$nbenfants > 3) * (input$n400 == 6) +
+          (input$nbenfants > 4) * (input$n500 == 6)
+      )
+    n8 <- (input$nbenfants > 0) *
+      as.numeric(
+        (input$nbenfants > 0) *
+          (input$n100 == 7) +
+          (input$nbenfants > 1) * (input$n200 == 7) +
+          (input$nbenfants > 2) * (input$n300 == 7) +
+          (input$nbenfants > 3) * (input$n400 == 7) +
+          (input$nbenfants > 4) * (input$n500 == 7)
+      )
+    n9 <- as.numeric(input$n9 * smic_brut() / 100)
+    n10 <- as.numeric(input$n10 * smic_net() / 100)
+    n21 <- as.numeric(input$n21 * smic_brut() / 100)
+    n22 <- as.numeric(input$n22 * smic_brut() / 100)
+    n13 <- as.numeric(input$n13 * smic_net() / 100)
+    n12 <- as.numeric(input$n12 * smic_net() / 100)
 
+    rev_act <- vector("numeric", (max(c(n21, n13)) %/% max(c(n22, n12))) + 2)
+    print(paste(
+      "RE3 choix_input",
+      system.time(choix_input(
+        n1,
+        input$nbenfants,
+        n2,
+        n3,
+        n4,
+        n5,
+        n6,
+        n7,
+        n8,
+        n9,
+        n10,
+        input$n11,
+        as.numeric(input$n15),
+        as.numeric(input$n16),
+        as.numeric(input$n17),
+        as.numeric(input$n18),
+        as.numeric(input$n19),
+        as.numeric(input$n20),
+        n21,
+        n22,
+        n13,
+        n12,
+        bareme_var_diff(),
+        year(),
+        n2000()
+      ))
+    ))
+    print(paste(
+      "RE castype",
+      system.time(data <- castype(rev_act, bareme_var(), year()))
+    ))
+    return(data)
+  })
+  
   # fonction réactive RE() retourne la table de données qui s'affiche dans l'onglet 3 (selon les colonnes choisies par l'utilisateur)
   RE <- reactive({
     rev <- input[[paste0("rev", year(), n2000())]]
@@ -914,7 +1025,26 @@ server <- function(session, input, output) {
     colnames(data) <- label(data)
     return(head(round(data[, show_vars], 2), n = (max_rows()), drop = FALSE))
   }) # fin de RE()
+  
+  # fonction réactive RE_diff() retourne la table de données qui s'affiche dans l'onglet 6 (selon les colonnes choisies par l'utilisateur)
+  RE_diff <- reactive({
+    rev <- input[[paste0("rev", year(), n2000())]]
+    prevsoc <- input[[paste0("prevsoc", year())]]
+    impotax <- input[[paste0("impotax", year())]]
+    minsoc <- input[[paste0("minsoc", year())]]
+    pf <- input[[paste0("pf", year())]]
+    alloclog <- input[[paste0("alloclog", year())]]
+    revdisp <- input[[paste0("revdisp", year())]]
 
+    show_vars <- c(rev, prevsoc, impotax, minsoc, pf, alloclog, revdisp)
+    data_baseline <- create_data()
+    colnames(data_baseline) <- label(data_baseline)
+    data_variante <- create_data_diff()
+    colnames(data_variante) <- label(data_variante)
+    data_diff <- data_variante - data_baseline
+    return(head(round(data_diff[, show_vars], 2), n = (max_rows()), drop = FALSE))
+  }) # fin de RE_diff()
+  
   # création et formatage de l'objet table qui s'affiche dans l'onglet 3
   output$base <- renderDataTable(
     {
@@ -933,6 +1063,25 @@ server <- function(session, input, output) {
       lengthChange = FALSE
     )
   ) #fin de output$base
+  
+  # création et formatage de l'objet table qui s'affiche dans l'onglet 3
+  output$base_diff <- renderDataTable(
+    {
+      RE_diff()
+    },
+    rownames = FALSE,
+    extensions = list('FixedHeader', 'Scroller'),
+    options = list(
+      scrollY = 400,
+      scroller = TRUE,
+      scrollX = TRUE,
+      autoWidth = TRUE,
+      fixedHeader = TRUE,
+      pageLength = (max_rows()),
+      sDom = '<"top">lrt<"bottom">ip',
+      lengthChange = FALSE
+    )
+  ) #fin de output$base_diff
 
   # création de l'objet table téléchargeable dans l'onglet 3
   output$tab.csv <- downloadHandler(
