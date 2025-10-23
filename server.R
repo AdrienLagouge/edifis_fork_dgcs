@@ -1041,7 +1041,25 @@ server <- function(session, input, output) {
     colnames(data_baseline) <- label(data_baseline)
     data_variante <- create_data_diff()
     colnames(data_variante) <- label(data_variante)
-    data_diff <- data_variante - data_baseline
+    
+    by = join_by(!!sym("Salaire brut en % du Smic brut temps plein (PR)"),
+                 !!sym("Salaire brut (PR)"),
+                 !!sym("Salaire net (PR)"))
+    
+    data_diff <- left_join(data_variante,data_baseline,by = by ,suffix = c("_var","_base"))
+    
+    # Trouver tous les préfixes uniques
+    prefixes <- data_diff %>%
+      select(ends_with("_var")) %>%
+      names() %>%
+      str_remove("_var$")
+    
+    # Créer toutes les colonnes de différence
+    for (prefix in prefixes) {
+      data_diff <- data_diff %>%
+        mutate(!!prefix := .data[[paste0(prefix, "_var")]] - .data[[paste0(prefix, "_base")]])
+    }
+
     return(head(round(data_diff[, show_vars], 2), n = (max_rows()), drop = FALSE))
   }) # fin de RE_diff()
   
@@ -1083,13 +1101,23 @@ server <- function(session, input, output) {
     )
   ) #fin de output$base_diff
 
-  # création de l'objet table téléchargeable dans l'onglet 3
+  # création de l'objet table téléchargeable dans l'onglet "Table de données"
   output$tab.csv <- downloadHandler(
     filename = function() {
       paste("tab_", input$year, ".csv")
     },
     content = function(file) {
       write.csv2(RE(), file, fileEncoding = "latin1", row.names = F)
+    }
+  )
+  
+  # création de l'objet table téléchargeable dans l'onglet "Résultats de la variante"
+  output$tab.diff.csv <- downloadHandler(
+    filename = function() {
+      paste("variante_", input$year, ".csv")
+    },
+    content = function(file) {
+      write.csv2(RE_diff(), file, fileEncoding = "latin1", row.names = F)
     }
   )
 

@@ -1891,7 +1891,14 @@ ui <-
                   dataTableOutput("base_diff"),
                   style = "font-size:70%"
                 ),
-                HTML("<br><br>")
+                div(
+                  style = "display: inline-block;vertical-align:top; width: 600px;",
+                  HTML("<br>")
+                ),
+                div(
+                  style = "display: inline-block;vertical-align:bottom;  width: 300px;",
+                  downloadButton('tab.diff.csv', 'Télécharger le tableau')
+                )
               )
         )
         )
