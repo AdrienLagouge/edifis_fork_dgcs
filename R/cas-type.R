@@ -3840,6 +3840,302 @@ castype2 <- function(data, leg, bareme_var, year, n2000) {
   print(p2)
 }
 
+castype2_var <- function(data_diff, leg, bareme_var_diff, year, n2000) {
+  ##data_diff est la table des données représentées avec à la fois le résultat baseline + variante + différence
+  ##leg est la légende qui suit le graphique
+  ##bareme_var_diff sont les paramètres législatifs
+  ##year est l'année de législation sélectionnée
+  ##n2000 est le type de revenu sélectionné
+  if (year > 15 & n2000 == 0) {
+    is_modif_RSA <- !(all(data_diff["mont_RSA"] == 0))
+    is_modif_PA <- !(all(data_diff["mont_PA"] == 0))
+    
+
+    fig <- plot_ly(data_diff, x = ~rev_act_net, y = ~mont_RSA_base)
+    p2 <- fig %>%
+      add_trace(
+        y = ~mont_RSA_base,
+        name = 'RSA (législation actuelle)',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n RSA: ',
+          round(data_diff$mont_RSA_base, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        y = ~mont_PA_base,
+        name = 'PA (législation actuelle)',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n PA: ',
+          round(data_diff$mont_PA_base, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        x = c(bareme_var_diff[["smic_n"]]),
+        type = 'scatter',
+        mode = 'lines',
+        line = list(shape = 'linear', color = 'black', dash = "dash"),
+        name = 'SMIC',
+        text = paste('SMIC: ', round(bareme_var_diff[["smic_n"]]), 'euros'),
+        hoverinfo = 'text'
+      ) %>%
+      layout(
+        title = "Evolutions du montant du RSA et de la PA \n selon le salaire net",
+        xaxis = list(title = "Salaire net (en euros)"),
+        yaxis = list(title = "PA et RSA (en euros)"),
+        margin = list(l = 20, r = 20, t = 40, b = 100),
+        legend = list(orientation = "v", x = 0.7, y = 0.8),
+        annotations = list(
+          x = 1,
+          y = -0.1,
+          text = leg,
+          showarrow = F,
+          xref = 'paper',
+          yref = 'paper',
+          xanchor = 'right',
+          yanchor = 'top',
+          align = "right",
+          font = list(size = 10)
+        )
+      )
+    
+    if (is_modif_RSA) {
+      p2 <- add_trace(p2,
+        y = ~mont_RSA_var,
+        name = 'RSA (variante)',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n RSA: ',
+          round(data_diff$mont_RSA_var, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      )} 
+      
+      if (is_modif_PA) {
+      p2 <- add_trace(p2,
+        y = ~mont_PA_var,
+        name = 'PA (variante)',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n PA: ',
+          round(data_diff$mont_PA_var, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      )} 
+  }
+  # if (year <= 15 & n2000 == 0) {
+  #   fig <- plot_ly(data, x = ~rev_act_net, y = ~RSA_act)
+  #   p2 <- fig %>%
+  #     add_trace(
+  #       y = ~RSA_act,
+  #       name = 'RSA',
+  #       type = 'scatter',
+  #       mode = 'lines+markers',
+  #       marker = list(size = 5),
+  #       text = paste(
+  #         'Salaire net: ',
+  #         round(data$rev_act_net, 0),
+  #         'euros \n RSA: ',
+  #         round(data$RSA_act, 0),
+  #         'euros'
+  #       ),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     add_trace(
+  #       y = ~ppe_tot_avRSA,
+  #       name = 'PPE',
+  #       type = 'scatter',
+  #       mode = 'lines+markers',
+  #       marker = list(size = 5),
+  #       text = paste(
+  #         'Salaire net: ',
+  #         round(data$rev_act_net, 0),
+  #         'euros \n PPE: ',
+  #         round(data$ppe_tot_avRSA, 0),
+  #         'euros'
+  #       ),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     add_trace(
+  #       x = c(bareme_var[["smic_n"]]),
+  #       type = 'scatter',
+  #       mode = 'lines',
+  #       line = list(shape = 'linear', color = 'black', dash = "dash"),
+  #       name = 'SMIC',
+  #       text = paste('SMIC: ', round(bareme_var[["smic_n"]]), 'euros'),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     layout(
+  #       title = "Montant du RSA activité et de la PPE \n selon le salaire net",
+  #       xaxis = list(title = "Salaire net (en euros)"),
+  #       yaxis = list(title = "PPE et RSA (en euros)"),
+  #       margin = list(l = 20, r = 20, t = 40, b = 100),
+  #       legend = list(orientation = "v", x = 0.7, y = 0.8),
+  #       annotations = list(
+  #         x = 1,
+  #         y = -0.1,
+  #         text = leg,
+  #         showarrow = F,
+  #         xref = 'paper',
+  #         yref = 'paper',
+  #         xanchor = 'right',
+  #         yanchor = 'top',
+  #         align = "right",
+  #         font = list(size = 10)
+  #       )
+  #     )
+  # }
+  # 
+  # if (year > 15 & n2000 == 1) {
+  #   fig <- plot_ly(data, x = ~ARE_net, y = ~mont_RSA)
+  #   p2 <- fig %>%
+  #     add_trace(
+  #       y = ~mont_RSA,
+  #       name = 'RSA',
+  #       type = 'scatter',
+  #       mode = 'lines+markers',
+  #       marker = list(size = 5),
+  #       text = paste(
+  #         'ARE nette: ',
+  #         round(data$ARE_net, 0),
+  #         'euros \n RSA: ',
+  #         round(data$mont_RSA, 0),
+  #         'euros'
+  #       ),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     add_trace(
+  #       y = ~mont_PA,
+  #       name = 'PA',
+  #       type = 'scatter',
+  #       mode = 'lines+markers',
+  #       marker = list(size = 5),
+  #       text = paste(
+  #         'ARE nette: ',
+  #         round(data$ARE_net, 0),
+  #         'euros \n PA: ',
+  #         round(data$mont_PA, 0),
+  #         'euros'
+  #       ),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     add_trace(
+  #       x = c(bareme_var[["smic_n"]]),
+  #       type = 'scatter',
+  #       mode = 'lines',
+  #       line = list(shape = 'linear', color = 'black', dash = "dash"),
+  #       name = 'SMIC',
+  #       text = paste('SMIC: ', round(bareme_var[["smic_n"]]), 'euros'),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     layout(
+  #       title = "Montant du RSA et de la PA \n selon l'ARE nette",
+  #       xaxis = list(title = "ARE nette (en euros)"),
+  #       yaxis = list(title = "PA et RSA (en euros)"),
+  #       margin = list(l = 20, r = 20, t = 40, b = 100),
+  #       legend = list(orientation = "v", x = 0.7, y = 0.8),
+  #       annotations = list(
+  #         x = 1,
+  #         y = -0.1,
+  #         text = leg,
+  #         showarrow = F,
+  #         xref = 'paper',
+  #         yref = 'paper',
+  #         xanchor = 'right',
+  #         yanchor = 'top',
+  #         align = "right",
+  #         font = list(size = 10)
+  #       )
+  #     )
+  # }
+  # if (year <= 15 & n2000 == 1) {
+  #   fig <- plot_ly(data, x = ~ARE_net, y = ~RSA_act)
+  #   p2 <- fig %>%
+  #     add_trace(
+  #       y = ~RSA_act,
+  #       name = 'RSA',
+  #       type = 'scatter',
+  #       mode = 'lines+markers',
+  #       marker = list(size = 5),
+  #       text = paste(
+  #         'ARE nette: ',
+  #         round(data$ARE_net, 0),
+  #         'euros \n RSA: ',
+  #         round(data$RSA_act, 0),
+  #         'euros'
+  #       ),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     add_trace(
+  #       y = ~ppe_tot_avRSA,
+  #       name = 'PPE',
+  #       type = 'scatter',
+  #       mode = 'lines+markers',
+  #       marker = list(size = 5),
+  #       text = paste(
+  #         'ARE nette: ',
+  #         round(data$ARE_net, 0),
+  #         'euros \n PPE: ',
+  #         round(data$ppe_tot_avRSA, 0),
+  #         'euros'
+  #       ),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     add_trace(
+  #       x = c(bareme_var[["smic_n"]]),
+  #       type = 'scatter',
+  #       mode = 'lines',
+  #       line = list(shape = 'linear', color = 'black', dash = "dash"),
+  #       name = 'SMIC',
+  #       text = paste('SMIC: ', round(bareme_var[["smic_n"]]), 'euros'),
+  #       hoverinfo = 'text'
+  #     ) %>%
+  #     layout(
+  #       title = "Montant du RSA activité et de la PPE \n selon l'ARE nette",
+  #       xaxis = list(title = "ARE nette (en euros)"),
+  #       yaxis = list(title = "PPE et RSA (en euros)"),
+  #       margin = list(l = 20, r = 20, t = 40, b = 100),
+  #       legend = list(orientation = "v", x = 0.7, y = 0.8),
+  #       annotations = list(
+  #         x = 1,
+  #         y = -0.1,
+  #         text = leg,
+  #         showarrow = F,
+  #         xref = 'paper',
+  #         yref = 'paper',
+  #         xanchor = 'right',
+  #         yanchor = 'top',
+  #         align = "right",
+  #         font = list(size = 10)
+  #       )
+  #     )
+  # }
+  print(p2)
+}
+
 #==================================================================================================================
 # La fonction castype3() génère le graphique empilé
 # 2 versions du code selon que le type de revenus sélectionné soit salaire ou ARE

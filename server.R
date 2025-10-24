@@ -1005,7 +1005,7 @@ server <- function(session, input, output) {
     ))
     print(paste(
       "RE castype",
-      system.time(data <- castype(rev_act, bareme_var(), year()))
+      system.time(data <- castype(rev_act, bareme_var_diff(), year()))
     ))
     return(data)
   })
@@ -1430,7 +1430,85 @@ server <- function(session, input, output) {
   output$graph2 <- renderPlotly({
     RE2()
   })
+  
+  # fonction réactive RE2_var() qui crée le graphique représentant les montants de RSA/PA/PPE (appel de la fonction castype2_var())
+  RE2_var <- reactive({
+    n22 <- as.numeric(input$n22 * smic_net() / 100)
+    n12 <- as.numeric(input$n12 * smic_net() / 100)
+    n25 <- (input$n24 %/% max(c(n22, n12)))
 
+    data_baseline <- head(create_data(), n = n25 + 1)
+    data_variante <- head(create_data_diff(), n = n25 + 1)
+    
+    by = join_by(!!sym("rev_act_net"))
+
+    data_diff <- left_join(data_variante,data_baseline,by = by ,suffix = c("_var","_base"))
+    
+    # Trouver tous les préfixes uniques
+    prefixes <- data_diff %>%
+      select(ends_with("_var")) %>%
+      names() %>%
+      str_remove("_var$")
+
+    # Créer toutes les colonnes de différence
+    for (prefix in prefixes) {
+      data_diff <- data_diff %>%
+        mutate(!!prefix := .data[[paste0(prefix, "_var")]] - .data[[paste0(prefix, "_base")]])
+    }
+
+    mylist <- c(
+      paste(
+        "Source : EDIFIS Maquette au 1er juillet",
+        input$year,
+        "de cas-types Drees-BRE\n"
+      ),
+      paste(
+        "Principaux paramètres retenus : Situation conjugale =",
+        ifelse(
+          input$n1 == 1,
+          "Seul(e)",
+          ifelse(input$n1 == 2, "Marié(e)s ou pacsé(e)s", "En concubinage")
+        ),
+        "; Nombre d'enfants =",
+        input$nbenfants,
+        ";\n"
+      ),
+      paste(
+        "Salaire du conjoint (en % du SMIC) =",
+        input$n9,
+        "; ARE du conjoint (en % du SMIC) =",
+        input$n10,
+        ";\n"
+      ),
+      paste(
+        "Autres revenus imposables du ménage (en euros) =",
+        input$n11,
+        "; Handicap =",
+        ifelse(input$n16 == 0, "Non", "Oui"),
+        "; Handicap du conjoint =",
+        ifelse(input$n17 == 0, "Non", "Oui"),
+        ";\n"
+      ),
+      paste(
+        "Statut d'occupation du logement =",
+        ifelse(
+          input$n20 == 0,
+          "Locataire en zone 2",
+          "Propriétaire non accédant ou logé gratuitement"
+        )
+      )
+    )
+    leg <- HTML(paste(mylist))
+
+    #print(paste("RE2 castype2",system.time(castype2(data,leg,bareme_var(),year(),n2000()))))
+    return(castype2_var(data_diff, leg, bareme_var_diff(), year(), n2000()))
+  }) #fin de RE2_var
+
+  #plotlysation du graphique
+  output$graph2_var <- renderPlotly({
+    RE2_var()
+  })
+  
   ################## Graphique empilé #######################
 
   # utile pour boucler sur l'année à terme :

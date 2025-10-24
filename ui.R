@@ -1852,8 +1852,8 @@ ui <-
                 searchPlaceholderText = "Rechercher...",
                 noOptionsText = "Aucune option disponible",
                 noSearchResultsText = "Aucun résultat",
-                optionsSelectedText = "options sélectionnées",
-                optionSelectedText = "option sélectionnée",
+                optionsSelectedText = "Options sélectionnées",
+                optionSelectedText = "Option sélectionnée",
                 allOptionsSelectedText = "Toutes les options sont sélectionnées",
                 hasDropdownWrapper = TRUE
             )),
@@ -1861,7 +1861,7 @@ ui <-
 
             hr(),
 
-            h4("Modifier les Valeurs"),
+            h4("Modifier les valeurs"),
             uiOutput("input_fields"),
             br(),
             actionButton(
@@ -1900,8 +1900,17 @@ ui <-
                   downloadButton('tab.diff.csv', 'Télécharger le tableau')
                 )
               )
+        ),
+        tabPanel("Graphiques variante",icon = icon("square-poll-vertical"),
+           fluidPage(
+              HTML("<br>"),
+              withSpinner(plotlyOutput(
+                "graph2_var",
+                width = "83%",
+                height = "400px"
+              ))
         )
         )
-      )
+      ))
     )
   ) # fin de la fonction Ui
