@@ -1904,8 +1904,18 @@ ui <-
         tabPanel("Graphiques variante",icon = icon("square-poll-vertical"),
            fluidPage(
               HTML("<br>"),
+              withSpinner(plotOutput("graph3_var", height = "500px")),
+              HTML("<br>"),
+              HTML("<br>"),
               withSpinner(plotlyOutput(
                 "graph2_var",
+                width = "83%",
+                height = "400px"
+              )),
+              HTML("<br>"),
+              HTML("<br>"),
+              withSpinner(plotlyOutput(
+                "graph2_diff",
                 width = "83%",
                 height = "400px"
               ))

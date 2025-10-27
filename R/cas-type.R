@@ -3849,7 +3849,8 @@ castype2_var <- function(data_diff, leg, bareme_var_diff, year, n2000) {
   if (year > 15 & n2000 == 0) {
     is_modif_RSA <- !(all(data_diff["mont_RSA"] == 0))
     is_modif_PA <- !(all(data_diff["mont_PA"] == 0))
-    
+    is_modif_AAH <- !(all(data_diff["mont_AAH"] == 0))
+    is_modif_APL <- !(all(data_diff["AL"] == 0))
 
     fig <- plot_ly(data_diff, x = ~rev_act_net, y = ~mont_RSA_base)
     p2 <- fig %>%
@@ -3884,18 +3885,48 @@ castype2_var <- function(data_diff, leg, bareme_var_diff, year, n2000) {
         hoverinfo = 'text'
       ) %>%
       add_trace(
-        x = c(bareme_var_diff[["smic_n"]]),
+        y = ~mont_AAH_base,
+        name = 'AAH (législation actuelle)',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n PA: ',
+          round(data_diff$mont_PA_base, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        y = ~AL_base,
+        name = 'Aides au logement (législation actuelle)',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n APL : ',
+          round(data_diff$AL_base, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        x = c(unique(bareme_var_diff[["smic_n"]])),
         type = 'scatter',
         mode = 'lines',
         line = list(shape = 'linear', color = 'black', dash = "dash"),
         name = 'SMIC',
-        text = paste('SMIC: ', round(bareme_var_diff[["smic_n"]]), 'euros'),
+        text = paste('SMIC: ', round(unique(bareme_var_diff[["smic_n"]])), 'euros'),
         hoverinfo = 'text'
       ) %>%
       layout(
-        title = "Evolutions du montant du RSA et de la PA \n selon le salaire net",
-        xaxis = list(title = "Salaire net (en euros)"),
-        yaxis = list(title = "PA et RSA (en euros)"),
+        title = "Montant des prestations sociales \n selon le salaire net",
+        xaxis = list(title = list(text ="Salaire net (en euros)",standoff=10),automargin = TRUE),
+        yaxis = list(title = "Montant (en euros)"),
         margin = list(l = 20, r = 20, t = 40, b = 100),
         legend = list(orientation = "v", x = 0.7, y = 0.8),
         annotations = list(
@@ -3945,194 +3976,142 @@ castype2_var <- function(data_diff, leg, bareme_var_diff, year, n2000) {
         ),
         hoverinfo = 'text'
       )} 
+    
+    if (is_modif_AAH) {
+      p2 <- add_trace(p2,
+                      y = ~mont_AAH_var,
+                      name = 'AAH (variante)',
+                      type = 'scatter',
+                      mode = 'lines+markers',
+                      marker = list(size = 5),
+                      text = paste(
+                        'Salaire net: ',
+                        round(data_diff$rev_act_net, 0),
+                        'euros \n AAH: ',
+                        round(data_diff$mont_AAH_var, 0),
+                        'euros'
+                      ),
+                      hoverinfo = 'text'
+      )} 
+    
+    if (is_modif_APL) {
+      p2 <- add_trace(p2,
+                      y = ~AL_var,
+                      name = 'Aides au logement (variante)',
+                      type = 'scatter',
+                      mode = 'lines+markers',
+                      marker = list(size = 5),
+                      text = paste(
+                        'Salaire net: ',
+                        round(data_diff$rev_act_net, 0),
+                        'euros \n APL: ',
+                        round(data_diff$AL_var, 0),
+                        'euros'
+                      ),
+                      hoverinfo = 'text'
+      )} 
   }
-  # if (year <= 15 & n2000 == 0) {
-  #   fig <- plot_ly(data, x = ~rev_act_net, y = ~RSA_act)
-  #   p2 <- fig %>%
-  #     add_trace(
-  #       y = ~RSA_act,
-  #       name = 'RSA',
-  #       type = 'scatter',
-  #       mode = 'lines+markers',
-  #       marker = list(size = 5),
-  #       text = paste(
-  #         'Salaire net: ',
-  #         round(data$rev_act_net, 0),
-  #         'euros \n RSA: ',
-  #         round(data$RSA_act, 0),
-  #         'euros'
-  #       ),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     add_trace(
-  #       y = ~ppe_tot_avRSA,
-  #       name = 'PPE',
-  #       type = 'scatter',
-  #       mode = 'lines+markers',
-  #       marker = list(size = 5),
-  #       text = paste(
-  #         'Salaire net: ',
-  #         round(data$rev_act_net, 0),
-  #         'euros \n PPE: ',
-  #         round(data$ppe_tot_avRSA, 0),
-  #         'euros'
-  #       ),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     add_trace(
-  #       x = c(bareme_var[["smic_n"]]),
-  #       type = 'scatter',
-  #       mode = 'lines',
-  #       line = list(shape = 'linear', color = 'black', dash = "dash"),
-  #       name = 'SMIC',
-  #       text = paste('SMIC: ', round(bareme_var[["smic_n"]]), 'euros'),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     layout(
-  #       title = "Montant du RSA activité et de la PPE \n selon le salaire net",
-  #       xaxis = list(title = "Salaire net (en euros)"),
-  #       yaxis = list(title = "PPE et RSA (en euros)"),
-  #       margin = list(l = 20, r = 20, t = 40, b = 100),
-  #       legend = list(orientation = "v", x = 0.7, y = 0.8),
-  #       annotations = list(
-  #         x = 1,
-  #         y = -0.1,
-  #         text = leg,
-  #         showarrow = F,
-  #         xref = 'paper',
-  #         yref = 'paper',
-  #         xanchor = 'right',
-  #         yanchor = 'top',
-  #         align = "right",
-  #         font = list(size = 10)
-  #       )
-  #     )
-  # }
-  # 
-  # if (year > 15 & n2000 == 1) {
-  #   fig <- plot_ly(data, x = ~ARE_net, y = ~mont_RSA)
-  #   p2 <- fig %>%
-  #     add_trace(
-  #       y = ~mont_RSA,
-  #       name = 'RSA',
-  #       type = 'scatter',
-  #       mode = 'lines+markers',
-  #       marker = list(size = 5),
-  #       text = paste(
-  #         'ARE nette: ',
-  #         round(data$ARE_net, 0),
-  #         'euros \n RSA: ',
-  #         round(data$mont_RSA, 0),
-  #         'euros'
-  #       ),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     add_trace(
-  #       y = ~mont_PA,
-  #       name = 'PA',
-  #       type = 'scatter',
-  #       mode = 'lines+markers',
-  #       marker = list(size = 5),
-  #       text = paste(
-  #         'ARE nette: ',
-  #         round(data$ARE_net, 0),
-  #         'euros \n PA: ',
-  #         round(data$mont_PA, 0),
-  #         'euros'
-  #       ),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     add_trace(
-  #       x = c(bareme_var[["smic_n"]]),
-  #       type = 'scatter',
-  #       mode = 'lines',
-  #       line = list(shape = 'linear', color = 'black', dash = "dash"),
-  #       name = 'SMIC',
-  #       text = paste('SMIC: ', round(bareme_var[["smic_n"]]), 'euros'),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     layout(
-  #       title = "Montant du RSA et de la PA \n selon l'ARE nette",
-  #       xaxis = list(title = "ARE nette (en euros)"),
-  #       yaxis = list(title = "PA et RSA (en euros)"),
-  #       margin = list(l = 20, r = 20, t = 40, b = 100),
-  #       legend = list(orientation = "v", x = 0.7, y = 0.8),
-  #       annotations = list(
-  #         x = 1,
-  #         y = -0.1,
-  #         text = leg,
-  #         showarrow = F,
-  #         xref = 'paper',
-  #         yref = 'paper',
-  #         xanchor = 'right',
-  #         yanchor = 'top',
-  #         align = "right",
-  #         font = list(size = 10)
-  #       )
-  #     )
-  # }
-  # if (year <= 15 & n2000 == 1) {
-  #   fig <- plot_ly(data, x = ~ARE_net, y = ~RSA_act)
-  #   p2 <- fig %>%
-  #     add_trace(
-  #       y = ~RSA_act,
-  #       name = 'RSA',
-  #       type = 'scatter',
-  #       mode = 'lines+markers',
-  #       marker = list(size = 5),
-  #       text = paste(
-  #         'ARE nette: ',
-  #         round(data$ARE_net, 0),
-  #         'euros \n RSA: ',
-  #         round(data$RSA_act, 0),
-  #         'euros'
-  #       ),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     add_trace(
-  #       y = ~ppe_tot_avRSA,
-  #       name = 'PPE',
-  #       type = 'scatter',
-  #       mode = 'lines+markers',
-  #       marker = list(size = 5),
-  #       text = paste(
-  #         'ARE nette: ',
-  #         round(data$ARE_net, 0),
-  #         'euros \n PPE: ',
-  #         round(data$ppe_tot_avRSA, 0),
-  #         'euros'
-  #       ),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     add_trace(
-  #       x = c(bareme_var[["smic_n"]]),
-  #       type = 'scatter',
-  #       mode = 'lines',
-  #       line = list(shape = 'linear', color = 'black', dash = "dash"),
-  #       name = 'SMIC',
-  #       text = paste('SMIC: ', round(bareme_var[["smic_n"]]), 'euros'),
-  #       hoverinfo = 'text'
-  #     ) %>%
-  #     layout(
-  #       title = "Montant du RSA activité et de la PPE \n selon l'ARE nette",
-  #       xaxis = list(title = "ARE nette (en euros)"),
-  #       yaxis = list(title = "PPE et RSA (en euros)"),
-  #       margin = list(l = 20, r = 20, t = 40, b = 100),
-  #       legend = list(orientation = "v", x = 0.7, y = 0.8),
-  #       annotations = list(
-  #         x = 1,
-  #         y = -0.1,
-  #         text = leg,
-  #         showarrow = F,
-  #         xref = 'paper',
-  #         yref = 'paper',
-  #         xanchor = 'right',
-  #         yanchor = 'top',
-  #         align = "right",
-  #         font = list(size = 10)
-  #       )
-  #     )
-  # }
+  print(p2)
+}
+
+castype2_diff <- function(data_diff, leg, bareme_var_diff, year, n2000) {
+  ##data_diff est la table des données représentées avec à la fois le résultat baseline + variante + différence
+  ##leg est la légende qui suit le graphique
+  ##bareme_var_diff sont les paramètres législatifs
+  ##year est l'année de législation sélectionnée
+  ##n2000 est le type de revenu sélectionné
+  if (year > 15 & n2000 == 0) {
+    fig <- plot_ly(data_diff, x = ~rev_act_net, y = ~mont_RSA)
+    p2 <- fig %>%
+      add_trace(
+        y = ~mont_RSA,
+        name = 'Gains/Pertes de RSA',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n RSA: ',
+          round(data_diff$mont_RSA, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        y = ~mont_PA,
+        name = 'Gains/Pertes de PA',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n PA: ',
+          round(data_diff$mont_PA, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        y = ~mont_AAH,
+        name = 'Gains/Pertes d\'AAH',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n AAH: ',
+          round(data_diff$mont_AAH, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        y = ~AL,
+        name = 'Gains/Pertes d\'aides au logement',
+        type = 'scatter',
+        mode = 'lines+markers',
+        marker = list(size = 5),
+        text = paste(
+          'Salaire net: ',
+          round(data_diff$rev_act_net, 0),
+          'euros \n APL: ',
+          round(data_diff$AL, 0),
+          'euros'
+        ),
+        hoverinfo = 'text'
+      ) %>%
+      add_trace(
+        x = c(unique(bareme_var_diff[["smic_n"]])),
+        type = 'scatter',
+        mode = 'lines',
+        line = list(shape = 'linear', color = 'black', dash = "dash"),
+        name = 'SMIC',
+        text = paste('SMIC: ', round(unique(bareme_var_diff[["smic_n"]])), 'euros'),
+        hoverinfo = 'text'
+      ) %>%
+      layout(
+        title = "Evolution simulée des prestations sociales \n selon le salaire net",
+        xaxis = list(title = list(text ="Salaire net (en euros)",standoff=10),automargin = TRUE),
+        yaxis = list(title = "Montant (en euros)"),
+        margin = list(l = 20, r = 20, t = 40, b = 100),
+        legend = list(orientation = "v", x = 0.7, y = 1),
+        annotations = list(
+          x = 1,
+          y = -0.1,
+          text = leg,
+          showarrow = F,
+          xref = 'paper',
+          yref = 'paper',
+          xanchor = 'right',
+          yanchor = 'top',
+          align = "right",
+          font = list(size = 10)
+        )
+      )
+  }
   print(p2)
 }
 
@@ -4148,6 +4127,7 @@ castype3 <- function(data, leg, bareme_var, year, mv, n2000) {
   ##year est l'année de législation sélectionnée
   ##mv est la liste des prestations et revenus primaires sélectionnés pour la représentation en graphique empilé
   ##n2000 est le type de revenu sélectionné
+  
   if (n2000 == 0) {
     print(paste(
       "melt castype4",
@@ -4170,6 +4150,7 @@ castype3 <- function(data, leg, bareme_var, year, mv, n2000) {
             are_nette_conjoint_ = are_nette_conjoint,
             autres_rev_ = autres_rev
           )
+
         data2 <- tidyr::pivot_longer(
           tmp,
           cols = all_of(mv),
@@ -4381,6 +4362,272 @@ castype3 <- function(data, leg, bareme_var, year, mv, n2000) {
       geom_text(
         mapping = aes(
           x = bareme_var[["smic_n"]],
+          y = 0,
+          vjust = 1.2,
+          label = "SMIC"
+        )
+      )
+  }
+  print(p3)
+}
+
+castype3_var <- function(data_diff, leg, bareme_var_diff, year, mv, n2000) {
+  ##data est la table des données représentées
+  ##leg est la légende qui suit le graphique
+  ##bareme_var sont les paramètres législatifs
+  ##year est l'année de législation sélectionnée
+  ##mv est la liste des prestations et revenus primaires sélectionnés pour la représentation en graphique empilé
+  ##n2000 est le type de revenu sélectionné
+  
+  mv_var <- ifelse(mv == "rev_act_net",
+         mv,
+         paste0(mv, "_var"))
+
+  if (n2000 == 0) {
+    print(paste(
+      "melt castype4",
+      system.time({
+        tmp <- data_diff %>%
+          select(
+            c(
+              "rev_act_net",
+              "rev_disp_var",
+              "are_nette_conjoint_var",
+              "sal_net_conj_var",
+              "autres_rev_var"
+            ),
+            all_of(mv_var)
+          ) %>%
+          mutate(across(all_of(mv_var), as.numeric)) %>%
+          mutate(
+            rev_act_net_ = rev_act_net,
+            sal_net_conj_ = sal_net_conj_var,
+            are_nette_conjoint_ = are_nette_conjoint_var,
+            autres_rev_ = autres_rev_var
+          )
+        
+        print("DEBUG >>")
+        print(sort(colnames(tmp)))
+
+        data2 <- tidyr::pivot_longer(
+          tmp,
+          cols = all_of(mv_var),
+          names_to = "variable"
+        ) %>%
+          rename(
+            rev_act_net = rev_act_net_,
+            sal_net_conj = sal_net_conj_,
+            are_nette_conjoint = are_nette_conjoint_,
+            autres_rev = autres_rev_
+          ) %>%
+          mutate(variable = case_when(
+            str_detect(variable,"_var") ~ str_remove(variable,"_var"),
+            TRUE ~ variable
+          )) |>
+          mutate(variable = factor(variable, levels = mv))
+      })
+    ))
+    
+    print("DEBUG >> data2")
+    print(unique(data2$variable))
+
+
+    # realisation du graphique en aires empilees
+    getPalette = colorRampPalette(brewer.pal(9, "Spectral"))
+    
+    max_revenu_net = max(data2$rev_act_net, na.rm = T)
+    max_revtot_net = max(
+      data2$rev_act_net +
+        data2$are_nette_conjoint +
+        data2$sal_net_conj +
+        data2$autres_rev,
+      na.rm = T
+    )
+    min_revtot_net = min(
+      data2$rev_act_net +
+        data2$are_nette_conjoint +
+        data2$sal_net_conj +
+        data2$autres_rev,
+      na.rm = T
+    )
+    
+    p3 <- ggplot(data2, aes(x = rev_act_net, y = value)) +
+      geom_area(position = 'stack', aes(fill = variable)) +
+      scale_fill_manual(
+        values = getPalette(15),
+        labels = labels(libelles[libelles %in% mv])
+      ) +
+      labs(
+        title = "Composition du revenu disponible dans le scénario simulé \n en fonction du salaire net",
+        x = "Salaire net (en euros)",
+        y = "Ressources finales (en euros)",
+        fill = "Prestations et \nrevenus primaires",
+        caption = leg
+      ) +
+      geom_line(
+        data = data2,
+        aes(rev_act_net, rev_disp_var, color = 'Revenu disponible'),
+        linewidth = 1
+      ) +
+      geom_line(
+        data = data.frame(
+          x = c(0, max_revenu_net),
+          y = c(min_revtot_net, max_revtot_net)
+        ),
+        aes(x = x, y = y, color = "Revenus primaires"),
+        linewidth = 1,
+        linetype = "dashed"
+      ) +
+      geom_vline(xintercept = c(bareme_var_diff[["smic_n"]]), linetype = "dotted") +
+      scale_colour_manual(
+        "",
+        breaks = c("Revenu disponible", "Revenus primaires"),
+        values = c("Revenu disponible" = "blue", "Revenus primaires" = "red")
+      ) +
+      theme(
+        panel.background = element_rect(
+          fill = "white",
+          colour = "white",
+          linewidth = 0.5,
+          linetype = "solid"
+        ),
+        panel.grid.major = element_line(
+          linewidth = 0.25,
+          linetype = 'solid',
+          colour = "grey"
+        ),
+        panel.border = element_blank(),
+        panel.grid.minor = element_line(
+          linewidth = 0.25,
+          linetype = 'solid',
+          colour = "grey"
+        ),
+        plot.title = element_text(face = "bold", size = 12, hjust = 0.5),
+        plot.caption = element_text(size = 10)
+      ) +
+      geom_text(
+        mapping = aes(
+          x = bareme_var_diff[["smic_n"]],
+          y = 0,
+          vjust = 1.2,
+          label = "SMIC"
+        )
+      )
+    #p3<-girafe(p3, height = 5, width = 6)
+  }
+  if (n2000 == 1) {
+    print(paste(
+      "melt castype4",
+      system.time({
+        tmp <- data %>%
+          select(
+            c(
+              "ARE_net_var",
+              "rev_disp_var",
+              "are_nette_conjoint_var",
+              "sal_net_conj_var",
+              "autres_rev_var"
+            ),
+            all_of(mv_var)
+          ) %>%
+          mutate(across(all_of(mv_var), as.numeric)) %>%
+          mutate(
+            ARE_net_ = ARE_net_var,
+            sal_net_conj_ = sal_net_conj_var,
+            are_nette_conjoint_ = are_nette_conjoint_var,
+            autres_rev_ = autres_rev_var
+          )
+        data2 <- tidyr::pivot_longer(
+          tmp,
+          cols = all_of(mv_var),
+          names_to = "variable"
+        ) %>%
+          rename(
+            ARE_net = ARE_net_,
+            sal_net_conj = sal_net_conj_,
+            are_nette_conjoint = are_nette_conjoint_,
+            autres_rev = autres_rev_
+          ) %>%
+          mutate(variable = factor(variable, levels = mv))
+      })
+    ))
+    
+    # Realisation du graphique en aires empilees
+    getPalette = colorRampPalette(brewer.pal(9, "Spectral"))
+    
+    max_revenu_net = max(data2$ARE_net, na.rm = T)
+    max_revtot_net = max(
+      data2$ARE_net +
+        data2$are_nette_conjoint +
+        data2$sal_net_conj +
+        data2$autres_rev,
+      na.rm = T
+    )
+    min_revtot_net = min(
+      data2$ARE_net +
+        data2$are_nette_conjoint +
+        data2$sal_net_conj +
+        data2$autres_rev,
+      na.rm = T
+    )
+    
+    p3 <- ggplot(data2, aes(x = ARE_net, y = value)) +
+      geom_area(position = 'stack', aes(fill = variable)) +
+      scale_fill_manual(
+        values = getPalette(15),
+        labels = labels(libelles[libelles %in% mv])
+      ) +
+      labs(
+        title = "Composition du revenu disponible \n en fonction de l'ARE nette",
+        x = "ARE nette (en euros)",
+        y = "Ressources finales (en euros)",
+        fill = "Prestations et \nrevenus primaires",
+        caption = leg
+      ) +
+      geom_line(
+        data = data2,
+        aes(ARE_net_var, rev_disp_var, color = 'Revenu disponible'),
+        linewidth = 1
+      ) +
+      geom_line(
+        data = data.frame(
+          x = c(0, max_revenu_net),
+          y = c(min_revtot_net, max_revtot_net)
+        ),
+        aes(x = x, y = y, color = "Revenus primaires"),
+        linewidth = 1,
+        linetype = "dashed"
+      ) +
+      geom_vline(xintercept = c(bareme_var_diff[["smic_n"]]), linetype = "dotted") +
+      scale_colour_manual(
+        "",
+        breaks = c("Revenu disponible", "Revenus primaires"),
+        values = c("Revenu disponible" = "blue", "Revenus primaires" = "red")
+      ) +
+      theme(
+        panel.background = element_rect(
+          fill = "white",
+          colour = "white",
+          linewidth = 0.5,
+          linetype = "solid"
+        ),
+        panel.grid.major = element_line(
+          linewidth = 0.25,
+          linetype = 'solid',
+          colour = "grey"
+        ),
+        panel.border = element_blank(),
+        panel.grid.minor = element_line(
+          linewidth = 0.25,
+          linetype = 'solid',
+          colour = "grey"
+        ),
+        plot.title = element_text(face = "bold", size = 12, hjust = 0.5),
+        plot.caption = element_text(size = 10)
+      ) +
+      geom_text(
+        mapping = aes(
+          x = bareme_var_diff[["smic_n"]],
           y = 0,
           vjust = 1.2,
           label = "SMIC"

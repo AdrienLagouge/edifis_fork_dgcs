@@ -105,7 +105,7 @@ server <- function(session, input, output) {
         session = session,
         inputId = "selected_labels",
         choices = noms,
-        selected = noms
+        selected = character(0)
       )
     },
     ignoreNULL = TRUE,
@@ -1443,7 +1443,7 @@ server <- function(session, input, output) {
     by = join_by(!!sym("rev_act_net"))
 
     data_diff <- left_join(data_variante,data_baseline,by = by ,suffix = c("_var","_base"))
-    
+  
     # Trouver tous les préfixes uniques
     prefixes <- data_diff %>%
       select(ends_with("_var")) %>%
@@ -1501,12 +1501,18 @@ server <- function(session, input, output) {
     leg <- HTML(paste(mylist))
 
     #print(paste("RE2 castype2",system.time(castype2(data,leg,bareme_var(),year(),n2000()))))
-    return(castype2_var(data_diff, leg, bareme_var_diff(), year(), n2000()))
+    return(list("graph2_var" = castype2_var(data_diff, leg, bareme_var_diff(), year(), n2000()),
+                "graph2_diff" = castype2_diff(data_diff, leg, bareme_var_diff(), year(), n2000())))
   }) #fin de RE2_var
 
   #plotlysation du graphique
   output$graph2_var <- renderPlotly({
-    RE2_var()
+    RE2_var()$graph2_var
+  })
+  
+  #plotlysation du graphique
+  output$graph2_diff <- renderPlotly({
+    RE2_var()$graph2_diff
   })
   
   ################## Graphique empilé #######################
@@ -1576,6 +1582,85 @@ server <- function(session, input, output) {
   }) #fin de RE3
   output$graph3 <- renderPlot({
     RE3()
+  })
+  
+  # fonction réactive RE3_var() qui crée le graphique empilé (appel de la fonction castype3())
+  RE3_var <- reactive({
+    mylist <- c(
+      paste(
+        "Source : EDIFIS Maquette au 1er juillet",
+        input$year,
+        "de cas-types Drees-BRE\n"
+      ),
+      paste(
+        "Principaux paramètres retenus : Situation conjugale =",
+        ifelse(
+          input$n1 == 1,
+          "Seul(e)",
+          ifelse(input$n1 == 2, "Marié(e)s ou pacsé(e)s", "En concubinage")
+        ),
+        "; Nombre d'enfants =",
+        input$nbenfants,
+        ";\n"
+      ),
+      paste(
+        "Salaire du conjoint (en % du SMIC) =",
+        input$n9,
+        "; ARE du conjoint (en % du SMIC) =",
+        input$n10,
+        ";\n"
+      ),
+      paste(
+        "Autres revenus imposables du ménage (en euros) =",
+        input$n11,
+        "; Handicap =",
+        ifelse(input$n16 == 0, "Non", "Oui"),
+        "; Handicap du conjoint =",
+        ifelse(input$n17 == 0, "Non", "Oui"),
+        ";\n"
+      ),
+      paste(
+        "Statut d'occupation du logement =",
+        ifelse(
+          input$n20 == 0,
+          "Locataire en zone 2",
+          "Propriétaire non accédant ou logé gratuitement"
+        )
+      )
+    )
+    leg <- HTML(paste(mylist))
+    
+    n22 <- as.numeric(input$n22 * smic_net() / 100)
+    n12 <- as.numeric(input$n12 * smic_net() / 100)
+    n25 <- input$n24 %/% max(c(n22, n12))
+    
+    data_baseline <- head(create_data(), n = n25 + 1)
+    data_variante <- head(create_data_diff(), n = n25 + 1)
+    
+    by = join_by(!!sym("rev_act_net"))
+    
+    data_diff <- left_join(data_variante,data_baseline,by = by ,suffix = c("_var","_base"))
+    
+    # Trouver tous les préfixes uniques
+    prefixes <- data_diff %>%
+      select(ends_with("_var")) %>%
+      names() %>%
+      str_remove("_var$")
+    
+    # Créer toutes les colonnes de différence
+    for (prefix in prefixes) {
+      data_diff <- data_diff %>%
+        mutate(!!prefix := .data[[paste0(prefix, "_var")]] - .data[[paste0(prefix, "_base")]])
+    }
+    mvars <- input[[paste0("show_area", year(), n2000())]]
+    print(paste(
+      "RE3 castype3",
+      system.time(castype3_var(data_diff, leg, bareme_var_diff(), year(), mvars, n2000()))
+    ))
+    #return(castype3(data,leg,bareme_var(),year(),mvars,n2000()))
+  }) #fin de RE3
+  output$graph3_var <- renderPlot({
+    RE3_var()
   })
   #output$graph3 <- renderGirafe({RE3()})
 
