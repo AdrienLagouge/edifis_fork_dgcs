@@ -1808,7 +1808,7 @@ ui <-
           ),
           ######################### 5eme onglet #########################
           tabPanel(
-            "Module variantiel",
+            HTML("Construction d'une<br>variante paramétrique"),
             icon = icon("diagram-project"),
 
             # Ajouter les dépendances virtualSelect
@@ -1882,7 +1882,14 @@ ui <-
             h4("Barème modifié (bareme_var_diff)"),
             verbatimTextOutput("bareme_modifie")
           ),
-          
+        tabPanel(HTML("Construction d'une<br>variante analytique"),
+                 icon = icon("diagram-project"),
+                 fluidPage(
+                   fileInput(
+                     "toml_file",
+                     "Uploader un fichier TOML de politique à simuler",
+                     accept = c(".toml", "text/toml")
+                   ))),
         tabPanel("Résultats de la variante",icon = icon("table"),
            mainPanel(
                 HTML("<br><br>"),

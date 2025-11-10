@@ -57,6 +57,33 @@
 options(encoding = "UTF-8")
 
 server <- function(session, input, output) {
+  #### Elements pour création et simulation d'une variante analytique
+  ### Création d'un répertoire temporaire pour les entrants/sortants de la variante analytique
+  tmp_dir <- file.path(tempdir(), "edifis_fork_tmp")
+  if (!dir.exists(tmp_dir)) {
+    dir.create(tmp_dir, recursive = TRUE)
+  }
+
+  ## Nettoyage automatique à la fermeture de l'application
+  onStop(function() {
+    if (dir.exists(tmp_dir)) {
+      # Supprime tous les fichiers dans le répertoire
+      file.remove(list.files(tmp_dir, full.names = TRUE))
+      # Supprime le répertoire vide
+      unlink(tmp_dir, recursive = TRUE)
+    }
+  })
+  
+  observeEvent(input$toml_file, {
+    if (is.null(input$toml_file)) return()
+    file <- input$toml_file
+    dest_file <- file.path(tmp_dir, file$name)
+    file.copy(file$datapath, dest_file)
+    showNotification(paste("Fichier", file$name, "uploadé avec succès !"))
+  })
+  
+  print(glue::glue("DEBUG répertoire temporaire = {tmp_dir}"))
+  
   ######################### 2e onglet #########################
 
   # fonction réactive year() retourne les 2 derniers caractères de l'année choisie par l'utilisateur
