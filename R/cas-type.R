@@ -69,7 +69,7 @@ castype <- function(vecteur, bareme_var, year) {
   ##bareme_var sont les paramètres législatifs
   ##year est l'année de législation sélectionnée
 
-  print(bareme_var[["seuil_D9"]])
+  print(paste("decile",bareme_var[["seuil_D9"]]))
 
   #le vecteur est rempli selon le pas choisi par l'utilisateur
   for (i in 2:length(vecteur)) {
@@ -534,7 +534,7 @@ castype <- function(vecteur, bareme_var, year) {
       -2
     ) /
       12
-
+    
     # AL
 
     AL <- floor(

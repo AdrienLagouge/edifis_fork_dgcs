@@ -889,6 +889,8 @@ server <- function(session, input, output) {
     n12 <- as.numeric(input$n12 * smic_net() / 100)
 
     rev_act <- vector("numeric", (max(c(n21, n13)) %/% max(c(n22, n12))) + 2)
+    
+    print(glue::glue("DEBUG rev_act {length(rev_act)}"))
     print(paste(
       "RE3 choix_input",
       system.time(choix_input(
@@ -1000,6 +1002,7 @@ server <- function(session, input, output) {
     n12 <- as.numeric(input$n12 * smic_net() / 100)
 
     rev_act <- vector("numeric", (max(c(n21, n13)) %/% max(c(n22, n12))) + 2)
+
     print(paste(
       "RE3 choix_input",
       system.time(choix_input(
